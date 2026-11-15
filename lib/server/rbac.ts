@@ -165,6 +165,26 @@ export function handleApiError(error: unknown) {
       { status: 400 },
     )
   }
+  if (error && typeof error === 'object' && 'code' in error) {
+    const prismaCode = (error as { code?: string; meta?: { target?: unknown } }).code
+    if (prismaCode === 'P2002') {
+      const target = (error as { meta?: { target?: unknown } }).meta?.target
+      const fieldInfo = Array.isArray(target) ? ` (${target.join(', ')})` : ''
+      return NextResponse.json(
+        { error: `Duplicate record: unique constraint violated${fieldInfo}.` },
+        { status: 409 },
+      )
+    }
+    if (prismaCode === 'P2003') {
+      return NextResponse.json(
+        { error: 'Operation rejected due to related dependent records or invalid reference.' },
+        { status: 409 },
+      )
+    }
+    if (prismaCode === 'P2025') {
+      return NextResponse.json({ error: 'Record not found.' }, { status: 404 })
+    }
+  }
   console.error('API Error:', error)
   return NextResponse.json({ error: 'An unexpected server error occurred.' }, { status: 500 })
 }

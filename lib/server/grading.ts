@@ -14,9 +14,11 @@ export function evaluateGradeFromBands(
   bands: GradeBandRule[],
 ): { grade: string; gpaPoints: number; isPassing: boolean } {
   const sorted = [...bands].sort((a, b) => b.minPercentage - a.minPercentage)
-  const rounded = Math.round(percentage * 100) / 100
-  for (const band of sorted) {
-    if (rounded >= band.minPercentage && rounded <= band.maxPercentage + 0.001) {
+  const clamped = Math.max(0, Math.min(100, Math.round(percentage * 100) / 100))
+  for (let i = 0; i < sorted.length; i++) {
+    const band = sorted[i]
+    const upperBound = i === 0 ? Math.max(100, band.maxPercentage) : sorted[i - 1].minPercentage
+    if (clamped >= band.minPercentage && clamped <= upperBound) {
       return {
         grade: band.grade,
         gpaPoints: band.gpaPoints,

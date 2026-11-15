@@ -104,6 +104,31 @@ export async function POST(request: Request) {
       },
     })
 
+    // Ensure open (DRAFT/SUBMITTED) exams have an ExamSubject paper for this (classId, subjectId)
+    const openExams = await prisma.exam.findMany({
+      where: { status: { in: ['DRAFT', 'SUBMITTED'] }, locked: false },
+    })
+    for (const openExam of openExams) {
+      await prisma.examSubject.upsert({
+        where: {
+          examId_classId_subjectId: {
+            examId: openExam.id,
+            classId: section.classId,
+            subjectId: subject.id,
+          },
+        },
+        update: {},
+        create: {
+          examId: openExam.id,
+          classId: section.classId,
+          subjectId: subject.id,
+          maxMarks: subject.maxMarksDefault,
+          passingMarks: subject.passingMarksDefault,
+          examDate: openExam.startDate,
+        },
+      })
+    }
+
     // Upsert assignment on (sectionId, subjectId) so changing teacher assignment updates access immediately
     const existing = await prisma.teacherAssignment.findUnique({
       where: {

@@ -196,3 +196,98 @@ export async function POST(request: Request) {
     return handleApiError(error)
   }
 }
+
+const updateSectionSchema = z.object({
+  sectionId: z.string().min(1),
+  room: z.string().trim().min(1).optional(),
+  capacity: z.coerce.number().int().min(1).max(100).optional(),
+})
+
+export async function PATCH(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const body = await request.json()
+    const data = updateSectionSchema.parse(body)
+
+    const existing = await prisma.section.findUnique({
+      where: { id: data.sectionId },
+      include: { schoolClass: true },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Section not found.')
+    }
+
+    const updated = await prisma.section.update({
+      where: { id: existing.id },
+      data: {
+        ...(data.room ? { room: data.room } : {}),
+        ...(data.capacity !== undefined ? { capacity: data.capacity } : {}),
+      },
+      include: { schoolClass: true },
+    })
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'SECTION_UPDATED',
+      entityType: 'Section',
+      entityId: updated.id,
+      beforeSummary: `${existing.schoolClass.name}·${existing.name} (${existing.room}, cap ${existing.capacity})`,
+      afterSummary: `${updated.schoolClass.name}·${updated.name} (${updated.room}, cap ${updated.capacity})`,
+    })
+
+    return NextResponse.json({
+      section: {
+        id: updated.id,
+        name: updated.name,
+        label: `${updated.schoolClass.name} · Section ${updated.name}`,
+        room: updated.room,
+        capacity: updated.capacity,
+      },
+    })
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const url = new URL(request.url)
+    const sectionId = url.searchParams.get('sectionId') || url.searchParams.get('id') || ''
+    if (!sectionId) throw new HttpError(400, 'Section ID is required.')
+
+    const existing = await prisma.section.findUnique({
+      where: { id: sectionId },
+      include: { schoolClass: true, _count: { select: { students: true } } },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Section not found.')
+    }
+
+    if (existing._count.students > 0) {
+      throw new HttpError(
+        409,
+        `Cannot delete ${existing.schoolClass.name} · Section ${existing.name} because ${existing._count.students} student(s) are currently enrolled in it.`,
+      )
+    }
+
+    await prisma.section.delete({ where: { id: existing.id } })
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'SECTION_DELETED',
+      entityType: 'Section',
+      entityId: existing.id,
+      beforeSummary: `${existing.schoolClass.name} · Section ${existing.name}`,
+      afterSummary: 'Deleted',
+    })
+
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    return handleApiError(error)
+  }
+}

@@ -114,6 +114,7 @@ function RoleOverview({ role }: { role: SchoolRole }) {
   const [quickInput2, setQuickInput2] = useState('')
   const [sectionsList, setSectionsList] = useState<Array<{ id: string; label: string; classId: string }>>([])
   const [selectedSectionId, setSelectedSectionId] = useState('')
+  const [chartRange, setChartRange] = useState<'This week' | 'Last 30 days'>('This week')
   const activeChild = useContext(ActiveChildContext)
 
   const notify = useCallback((message: string) => {
@@ -487,10 +488,17 @@ function RoleOverview({ role }: { role: SchoolRole }) {
             <CardHeader>
               <div>
                 <CardTitle>Enrollment overview</CardTitle>
-                <p>Student attendance snapshot · This week</p>
+                <p>Student attendance snapshot · {chartRange}</p>
               </div>
-              <button className="workspace-filter-button">
-                This week <ChevronDown size={14} />
+              <button
+                className="workspace-filter-button"
+                onClick={() => {
+                  const next = chartRange === 'This week' ? 'Last 30 days' : 'This week'
+                  setChartRange(next)
+                  notify(`Showing attendance snapshot for ${next.toLowerCase()}.`)
+                }}
+              >
+                {chartRange} <ChevronDown size={14} />
               </button>
             </CardHeader>
             <CardContent>
@@ -665,7 +673,11 @@ function RoleOverview({ role }: { role: SchoolRole }) {
                         {child.program} · {roomVal}
                       </p>
                     </div>
-                    <button className="child-more" aria-label={`More about ${child.name}`}>
+                    <button
+                      className="child-more"
+                      aria-label={`More about ${child.name}`}
+                      onClick={() => router.push('/guardian/results')}
+                    >
                       <MoreHorizontal size={17} />
                     </button>
                   </CardHeader>
@@ -1075,6 +1087,10 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
   const [formField4, setFormField4] = useState('')
   const [unlockModalExam, setUnlockModalExam] = useState<ExamRow | null>(null)
   const [unlockReasonInput, setUnlockReasonInput] = useState('')
+  const [editingStudent, setEditingStudent] = useState<(StudentRecord & { email?: string }) | null>(null)
+  const [editStudentName, setEditStudentName] = useState('')
+  const [editStudentProgram, setEditStudentProgram] = useState('')
+  const [editStudentStatus, setEditStudentStatus] = useState<'ACTIVE' | 'REVIEW'>('ACTIVE')
 
   const title = section
     .split('-')
@@ -1101,7 +1117,9 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
         if (Array.isArray(stRes.students)) setStudentsData(stRes.students)
         if (Array.isArray(clsRes.sections)) {
           setSectionsData(clsRes.sections)
-          if (!formField3 && clsRes.sections[0]) setFormField3(clsRes.sections[0].id)
+          if (clsRes.sections[0]) {
+            setFormField3((prev) => prev || clsRes.sections[0].id)
+          }
         }
       }
 
@@ -1137,9 +1155,18 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
           apiJson('/api/subjects').catch(() => ({ subjects: [] })),
         ])
         if (Array.isArray(aRes.assignments)) setAssignmentsData(aRes.assignments)
-        if (Array.isArray(tRes.teachers)) setTeachersData(tRes.teachers)
-        if (Array.isArray(cRes.sections)) setSectionsData(cRes.sections)
-        if (Array.isArray(sRes.subjects)) setSubjectsData(sRes.subjects)
+        if (Array.isArray(tRes.teachers)) {
+          setTeachersData(tRes.teachers)
+          if (tRes.teachers[0]) setFormField1((prev) => prev || tRes.teachers[0].id)
+        }
+        if (Array.isArray(cRes.sections)) {
+          setSectionsData(cRes.sections)
+          if (cRes.sections[0]) setFormField2((prev) => prev || cRes.sections[0].id)
+        }
+        if (Array.isArray(sRes.subjects)) {
+          setSubjectsData(sRes.subjects)
+          if (sRes.subjects[0]) setFormField3((prev) => prev || sRes.subjects[0].dbId || sRes.subjects[0].id)
+        }
       }
 
       if (isAttendancePage) {
@@ -1157,7 +1184,7 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
             attRes.roster.forEach((r: { id: string; todayStatus: string | null }) => {
               if (r.todayStatus) initialAtt[r.id] = r.todayStatus
             })
-            setAttendance(initialAtt)
+            setAttendance((prev) => ({ ...initialAtt, ...prev }))
           }
         } else if (role === 'guardian') {
           const attRes = await apiJson('/api/attendance')
@@ -1201,7 +1228,7 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
               initialMarks[r.studentId] = String(r.marksObtained)
             }
           })
-          setMarks(initialMarks)
+          setMarks((prev) => ({ ...initialMarks, ...prev }))
         }
       }
 
@@ -1278,7 +1305,6 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
     activeAttendanceSectionId,
     activeMarksExamId,
     reportType,
-    formField3,
   ])
 
   useEffect(() => {
@@ -1346,7 +1372,9 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
             : 'Submit marks'
           : section === 'reports'
             ? 'Export CSV report'
-            : `Add ${title.toLowerCase().replace(/s$/, '')}`
+            : section === 'classes'
+              ? 'Add class'
+              : `Add ${title.toLowerCase().replace(/s$/, '')}`
 
   const studentColumns =
     section === 'results'
@@ -1477,9 +1505,17 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
       return
     }
     if (role === 'admin') {
-      setFormField1('')
-      setFormField2('')
-      setFormField4('')
+      if (section === 'assignments') {
+        setFormField1(teachersData[0]?.id || '')
+        setFormField2(sectionsData[0]?.id || '')
+        setFormField3(subjectsData[0]?.dbId || subjectsData[0]?.id || '')
+        setFormField4('09:30')
+      } else {
+        setFormField1('')
+        setFormField2('')
+        if (section !== 'students') setFormField3('')
+        setFormField4('')
+      }
       setCreateDialogOpen(true)
       return
     }
@@ -1729,7 +1765,10 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
               <select
                 aria-label="Select assigned section"
                 value={activeAttendanceSectionId}
-                onChange={(e) => setActiveAttendanceSectionId(e.target.value)}
+                onChange={(e) => {
+                  setAttendance({})
+                  setActiveAttendanceSectionId(e.target.value)
+                }}
                 style={{ height: 28, border: '1px solid #d8e9df', borderRadius: 5, fontSize: 9, padding: '0 8px' }}
               >
                 {sectionsData.map((s) => (
@@ -2688,6 +2727,12 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
                           : [...current, (record as StudentRecord).id],
                       )
                     }
+                    onAction={(st) => {
+                      setEditingStudent(st)
+                      setEditStudentName(st.name)
+                      setEditStudentProgram(st.program)
+                      setEditStudentStatus(st.status === 'Review' ? 'REVIEW' : 'ACTIVE')
+                    }}
                   />
                 ),
               )}
@@ -2770,72 +2815,240 @@ function RoleDataPage({ role, section }: { role: SchoolRole; section: string }) 
             <DialogDescription>Create a new record in the school PostgreSQL database.</DialogDescription>
           </DialogHeader>
           <div className="payment-form">
-            <label>
-              {section === 'subjects'
-                ? 'Subject Code (e.g. CHM-101)'
-                : section === 'assignments'
-                  ? 'Teacher Code (e.g. TCH-1001)'
-                  : isFeePage
-                    ? 'Student ID (e.g. STU-24018)'
-                    : 'Name / Title'}
-              <Input value={formField1} onChange={(e) => setFormField1(e.target.value)} placeholder="Enter value" />
-            </label>
-            <label>
-              {section === 'classes'
-                ? 'Grade Level (9, 10, 11)'
-                : section === 'subjects'
-                  ? 'Subject Name'
-                  : section === 'assignments'
-                    ? 'Section ID'
-                    : isFeePage
-                      ? 'Fee Description'
-                      : isExamPage
-                        ? 'Academic Term'
-                        : 'Email Address'}
-              <Input value={formField2} onChange={(e) => setFormField2(e.target.value)} placeholder="Enter value" />
-            </label>
-            {section === 'students' && sectionsData.length > 0 ? (
-              <label>
-                Class & Section
-                <select value={formField3} onChange={(e) => setFormField3(e.target.value)}>
-                  {sectionsData.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+            {section === 'assignments' ? (
+              <>
+                <label>
+                  Teacher
+                  {teachersData.length > 0 ? (
+                    <select
+                      aria-label="Teacher"
+                      value={formField1}
+                      onChange={(e) => setFormField1(e.target.value)}
+                    >
+                      {teachersData.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.name} ({t.id})
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <Input
+                      aria-label="Teacher"
+                      value={formField1}
+                      onChange={(e) => setFormField1(e.target.value)}
+                      placeholder="Teacher Code (e.g. TCH-1001)"
+                    />
+                  )}
+                </label>
+                <label>
+                  Class & Section
+                  {sectionsData.length > 0 ? (
+                    <select
+                      aria-label="Class & Section"
+                      value={formField2}
+                      onChange={(e) => setFormField2(e.target.value)}
+                    >
+                      {sectionsData.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <Input
+                      aria-label="Class & Section"
+                      value={formField2}
+                      onChange={(e) => setFormField2(e.target.value)}
+                      placeholder="Section ID"
+                    />
+                  )}
+                </label>
+                <label>
+                  Subject
+                  {subjectsData.length > 0 ? (
+                    <select
+                      aria-label="Subject"
+                      value={formField3}
+                      onChange={(e) => setFormField3(e.target.value)}
+                    >
+                      {subjectsData.map((sub) => (
+                        <option key={sub.dbId || sub.id} value={sub.dbId || sub.id}>
+                          {sub.name} ({sub.code})
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <Input
+                      aria-label="Subject"
+                      value={formField3}
+                      onChange={(e) => setFormField3(e.target.value)}
+                      placeholder="Subject Code (e.g. BIO-101)"
+                    />
+                  )}
+                </label>
+                <label>
+                  Schedule Time
+                  <Input
+                    aria-label="Schedule Time"
+                    value={formField4}
+                    onChange={(e) => setFormField4(e.target.value)}
+                    placeholder="e.g. 09:30"
+                  />
+                </label>
+              </>
             ) : (
-              <label>
-                {section === 'classes'
-                  ? 'Section Name (e.g. C)'
-                  : section === 'teachers' || section === 'subjects'
-                    ? 'Department'
+              <>
+                <label>
+                  {section === 'subjects'
+                    ? 'Subject Code (e.g. CHM-101)'
                     : isFeePage
-                      ? 'Amount ($)'
-                      : isExamPage
-                        ? 'Start Date (YYYY-MM-DD)'
-                        : 'Phone / Detail'}
-                <Input value={formField3} onChange={(e) => setFormField3(e.target.value)} placeholder="Enter value" />
-              </label>
+                      ? 'Student ID (e.g. STU-24018)'
+                      : 'Name / Title'}
+                  <Input value={formField1} onChange={(e) => setFormField1(e.target.value)} placeholder="Enter value" />
+                </label>
+                <label>
+                  {section === 'classes'
+                    ? 'Grade Level (9, 10, 11)'
+                    : section === 'subjects'
+                      ? 'Subject Name'
+                      : isFeePage
+                        ? 'Fee Description'
+                        : isExamPage
+                          ? 'Academic Term'
+                          : 'Email Address'}
+                  <Input value={formField2} onChange={(e) => setFormField2(e.target.value)} placeholder="Enter value" />
+                </label>
+                {section === 'students' && sectionsData.length > 0 ? (
+                  <label>
+                    Class & Section
+                    <select value={formField3} onChange={(e) => setFormField3(e.target.value)}>
+                      {sectionsData.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ) : (
+                  <label>
+                    {section === 'classes'
+                      ? 'Section Name (e.g. C)'
+                      : section === 'teachers' || section === 'subjects'
+                        ? 'Department'
+                        : isFeePage
+                          ? 'Amount ($)'
+                          : isExamPage
+                            ? 'Start Date (YYYY-MM-DD)'
+                            : 'Phone / Detail'}
+                    <Input value={formField3} onChange={(e) => setFormField3(e.target.value)} placeholder="Enter value" />
+                  </label>
+                )}
+                <label>
+                  {section === 'students'
+                    ? 'Program (Science, Arts, Commerce)'
+                    : section === 'guardians'
+                      ? 'Link Student Code (e.g. STU-24018)'
+                      : section === 'classes'
+                        ? 'Room (e.g. Room 205)'
+                        : isFeePage
+                          ? 'Due Date (YYYY-MM-DD)'
+                          : isExamPage
+                            ? 'End Date (YYYY-MM-DD)'
+                            : 'Additional Info'}
+                  <Input value={formField4} onChange={(e) => setFormField4(e.target.value)} placeholder="Enter value" />
+                </label>
+              </>
             )}
-            <label>
-              {section === 'students'
-                ? 'Program (Science, Arts, Commerce)'
-                : section === 'guardians'
-                  ? 'Link Student Code (e.g. STU-24018)'
-                  : section === 'classes'
-                    ? 'Room (e.g. Room 205)'
-                    : isFeePage
-                      ? 'Due Date (YYYY-MM-DD)'
-                      : isExamPage
-                        ? 'End Date (YYYY-MM-DD)'
-                        : 'Additional Info'}
-              <Input value={formField4} onChange={(e) => setFormField4(e.target.value)} placeholder="Enter value" />
-            </label>
             <button onClick={handleCreateSubmit}>
               Save to database <Check size={15} />
             </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!editingStudent} onOpenChange={(open) => !open && setEditingStudent(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {role === 'admin' ? `Manage Student · ${editingStudent?.id}` : `Student Profile · ${editingStudent?.id}`}
+            </DialogTitle>
+            <DialogDescription>
+              {editingStudent?.name} · {editingStudent?.grade}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="payment-form">
+            <label>
+              Full name
+              <Input
+                aria-label="Edit student name"
+                value={editStudentName}
+                readOnly={role !== 'admin'}
+                onChange={(e) => setEditStudentName(e.target.value)}
+              />
+            </label>
+            <label>
+              Academic program
+              <Input
+                aria-label="Edit student program"
+                value={editStudentProgram}
+                readOnly={role !== 'admin'}
+                onChange={(e) => setEditStudentProgram(e.target.value)}
+              />
+            </label>
+            <label>
+              Enrollment status
+              <select
+                aria-label="Edit student status"
+                value={editStudentStatus}
+                disabled={role !== 'admin'}
+                onChange={(e) => setEditStudentStatus(e.target.value as 'ACTIVE' | 'REVIEW')}
+              >
+                <option value="ACTIVE">Active</option>
+                <option value="REVIEW">Review</option>
+              </select>
+            </label>
+            {role === 'admin' && editingStudent && (
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  onClick={async () => {
+                    try {
+                      await apiJson(`/api/students/${editingStudent.id}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify({
+                          name: editStudentName,
+                          program: editStudentProgram,
+                          status: editStudentStatus,
+                        }),
+                      })
+                      setEditingStudent(null)
+                      showToast('Student record updated.')
+                      loadSectionData()
+                    } catch (err) {
+                      showToast(err instanceof Error ? err.message : 'Failed to update student.')
+                    }
+                  }}
+                >
+                  Save changes <Check size={15} />
+                </button>
+                <button
+                  style={{ background: '#fee2e2', color: '#991b1b' }}
+                  onClick={async () => {
+                    try {
+                      await apiJson(`/api/students/${editingStudent.id}`, {
+                        method: 'DELETE',
+                      })
+                      setEditingStudent(null)
+                      showToast('Student deleted from database.')
+                      loadSectionData()
+                    } catch (err) {
+                      showToast(err instanceof Error ? err.message : 'Failed to delete student.')
+                    }
+                  }}
+                >
+                  Delete student
+                </button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
@@ -2881,12 +3094,14 @@ function StudentTableRow({
   showEmail,
   selected,
   onSelect,
+  onAction,
 }: {
   student: StudentRecord & { email?: string }
   columns: string[]
   showEmail: boolean
   selected: boolean
   onSelect: () => void
+  onAction?: (student: StudentRecord & { email?: string }) => void
 }) {
   const values: Record<string, React.ReactNode> = {
     Student: (
@@ -2925,7 +3140,7 @@ function StudentTableRow({
       ))}
       {showEmail && <span>{student.email || `${student.name.toLowerCase().replaceAll(' ', '.')}@school.demo`}</span>}
       <span>
-        <button className="row-more" aria-label={`Open ${student.name} actions`}>
+        <button className="row-more" aria-label={`Open ${student.name} actions`} onClick={() => onAction?.(student)}>
           ···
         </button>
       </span>

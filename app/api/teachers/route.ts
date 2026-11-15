@@ -212,3 +212,50 @@ export async function PATCH(request: Request) {
     return handleApiError(error)
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const url = new URL(request.url)
+    const id = url.searchParams.get('id') || ''
+    if (!id) throw new HttpError(400, 'Teacher ID is required.')
+
+    const existing = await prisma.teacherProfile.findFirst({
+      where: { OR: [{ id }, { employeeCode: id }] },
+      include: { user: true, _count: { select: { assignments: true } } },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Teacher record not found.')
+    }
+
+    const dependentAttendance = await prisma.attendanceRecord.count({
+      where: { markedById: existing.userId },
+    })
+    const dependentMarks = await prisma.markEntry.count({
+      where: { enteredById: existing.userId },
+    })
+    if (dependentAttendance > 0 || dependentMarks > 0) {
+      throw new HttpError(
+        409,
+        'Cannot delete teacher with historical attendance or mark entries; set status to INACTIVE instead.',
+      )
+    }
+
+    await prisma.user.delete({ where: { id: existing.userId } })
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'TEACHER_DELETED',
+      entityType: 'Teacher',
+      entityId: existing.employeeCode,
+      beforeSummary: `${existing.user.name} (${existing.employeeCode})`,
+      afterSummary: 'Deleted',
+    })
+
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    return handleApiError(error)
+  }
+}

@@ -476,7 +476,14 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
             {!isGuardian && (
               <div className="role-page-actions">
                 {isAdmin && (
-                  <button className="role-primary-button" onClick={() => setActionOpen(true)}>
+                  <button
+                    className="role-primary-button"
+                    onClick={() => {
+                      const dataBtn = document.querySelector<HTMLButtonElement>('button.data-action')
+                      if (dataBtn) dataBtn.click()
+                      else setActionOpen(true)
+                    }}
+                  >
                     <Plus size={15} />{' '}
                     {pageTitle === 'Overview'
                       ? 'Add student'

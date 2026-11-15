@@ -56,6 +56,10 @@ export async function POST(request: Request) {
     const body = await request.json()
     const data = createSubjectSchema.parse(body)
 
+    if (data.passingMarksDefault > data.maxMarksDefault) {
+      throw new HttpError(400, 'Passing marks cannot exceed maximum marks.')
+    }
+
     const existing = await prisma.subject.findFirst({
       where: {
         OR: [
@@ -115,6 +119,113 @@ export async function POST(request: Request) {
       },
       { status: 201 },
     )
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
+const updateSubjectSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().trim().min(2).optional(),
+  department: z.string().trim().min(2).optional(),
+  maxMarksDefault: z.coerce.number().int().min(10).max(500).optional(),
+  passingMarksDefault: z.coerce.number().int().min(1).max(500).optional(),
+})
+
+export async function PATCH(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const body = await request.json()
+    const data = updateSubjectSchema.parse(body)
+
+    const existing = await prisma.subject.findFirst({
+      where: { OR: [{ id: data.id }, { code: data.id.toUpperCase() }] },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Subject not found.')
+    }
+
+    const nextMax = data.maxMarksDefault ?? existing.maxMarksDefault
+    const nextPass = data.passingMarksDefault ?? existing.passingMarksDefault
+    if (nextPass > nextMax) {
+      throw new HttpError(400, 'Passing marks cannot exceed maximum marks.')
+    }
+
+    const updated = await prisma.subject.update({
+      where: { id: existing.id },
+      data: {
+        ...(data.name ? { name: data.name } : {}),
+        ...(data.department ? { department: data.department } : {}),
+        maxMarksDefault: nextMax,
+        passingMarksDefault: nextPass,
+      },
+    })
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'SUBJECT_UPDATED',
+      entityType: 'Subject',
+      entityId: updated.code,
+      beforeSummary: `${existing.name} (${existing.maxMarksDefault}/${existing.passingMarksDefault})`,
+      afterSummary: `${updated.name} (${updated.maxMarksDefault}/${updated.passingMarksDefault})`,
+    })
+
+    return NextResponse.json({
+      subject: {
+        id: updated.code,
+        dbId: updated.id,
+        code: updated.code,
+        name: updated.name,
+        department: updated.department,
+        maxMarksDefault: updated.maxMarksDefault,
+        passingMarksDefault: updated.passingMarksDefault,
+      },
+    })
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const url = new URL(request.url)
+    const id = url.searchParams.get('id') || ''
+    if (!id) throw new HttpError(400, 'Subject ID or code is required.')
+
+    const existing = await prisma.subject.findFirst({
+      where: { OR: [{ id }, { code: id.toUpperCase() }] },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Subject not found.')
+    }
+
+    const marksCount = await prisma.markEntry.count({
+      where: { examSubject: { subjectId: existing.id } },
+    })
+    if (marksCount > 0) {
+      throw new HttpError(
+        409,
+        `Cannot delete subject ${existing.name} (${existing.code}) because ${marksCount} examination mark entries depend on it.`,
+      )
+    }
+
+    await prisma.subject.delete({ where: { id: existing.id } })
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'SUBJECT_DELETED',
+      entityType: 'Subject',
+      entityId: existing.code,
+      beforeSummary: `${existing.name} (${existing.code})`,
+      afterSummary: 'Deleted',
+    })
+
+    return NextResponse.json({ ok: true })
   } catch (error) {
     return handleApiError(error)
   }

@@ -76,7 +76,7 @@ export async function GET(request: Request) {
       (await prisma.subject.findFirst({ orderBy: { name: 'asc' } }))?.id ||
       ''
 
-    const examSubject = await prisma.examSubject.findFirst({
+    let examSubject = await prisma.examSubject.findFirst({
       where: {
         examId: activeExam.id,
         classId: section.classId,
@@ -84,6 +84,31 @@ export async function GET(request: Request) {
       },
       include: { subject: true },
     })
+
+    if (!examSubject && activeSubjectId && !activeExam.locked && activeExam.status !== 'PUBLISHED') {
+      const targetSubject = await prisma.subject.findUnique({ where: { id: activeSubjectId } })
+      if (targetSubject) {
+        examSubject = await prisma.examSubject.upsert({
+          where: {
+            examId_classId_subjectId: {
+              examId: activeExam.id,
+              classId: section.classId,
+              subjectId: targetSubject.id,
+            },
+          },
+          update: {},
+          create: {
+            examId: activeExam.id,
+            classId: section.classId,
+            subjectId: targetSubject.id,
+            maxMarks: targetSubject.maxMarksDefault,
+            passingMarks: targetSubject.passingMarksDefault,
+            examDate: activeExam.startDate,
+          },
+          include: { subject: true },
+        })
+      }
+    }
 
     const students = await prisma.student.findMany({
       where: { sectionId: section.id },
@@ -201,6 +226,36 @@ export async function POST(request: Request) {
         },
         include: { exam: true, subject: true, schoolClass: true },
       })
+
+      if (!examSubject && !targetExam.locked && targetExam.status !== 'PUBLISHED') {
+        if (
+          session.role === 'admin' ||
+          (scope?.classIds.includes(firstStudent.classId) && scope?.subjectIds.includes(targetSubjectId))
+        ) {
+          const subj = await prisma.subject.findUnique({ where: { id: targetSubjectId } })
+          if (subj) {
+            examSubject = await prisma.examSubject.upsert({
+              where: {
+                examId_classId_subjectId: {
+                  examId: targetExam.id,
+                  classId: firstStudent.classId,
+                  subjectId: subj.id,
+                },
+              },
+              update: {},
+              create: {
+                examId: targetExam.id,
+                classId: firstStudent.classId,
+                subjectId: subj.id,
+                maxMarks: subj.maxMarksDefault,
+                passingMarks: subj.passingMarksDefault,
+                examDate: targetExam.startDate,
+              },
+              include: { exam: true, subject: true, schoolClass: true },
+            })
+          }
+        }
+      }
     }
 
     if (!examSubject) {

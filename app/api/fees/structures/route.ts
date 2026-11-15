@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/server/prisma'
-import { handleApiError, requireSession } from '@/lib/server/rbac'
-import { formatCentsToDollars } from '@/lib/server/fees'
+import { handleApiError, HttpError, requireSession } from '@/lib/server/rbac'
+import { formatCentsToDollars, parseDollarInputToCents } from '@/lib/server/fees'
 import { logAudit } from '@/lib/server/audit'
 
 const createStructureSchema = z.object({
   name: z.string().trim().min(2),
-  categoryName: z.string().trim().min(2).default('Tuition Fee'),
-  amountCents: z.coerce.number().int().positive(),
+  categoryName: z.string().trim().min(2).optional(),
+  category: z.string().trim().min(2).optional(),
+  amountCents: z.coerce.number().int().positive().optional(),
+  amountDollars: z.union([z.string(), z.number()]).optional(),
   academicTerm: z.string().trim().default('Term 2'),
   dueDate: z.string().default('2026-10-28'),
   classId: z.string().optional(),
@@ -45,10 +47,22 @@ export async function POST(request: Request) {
     const body = await request.json()
     const data = createStructureSchema.parse(body)
 
+    const amountCents =
+      data.amountCents !== undefined
+        ? data.amountCents
+        : data.amountDollars !== undefined
+          ? parseDollarInputToCents(data.amountDollars)
+          : NaN
+
+    if (!Number.isInteger(amountCents) || amountCents <= 0) {
+      throw new HttpError(400, 'Fee structure amount must be a positive integer in cents.')
+    }
+
+    const catName = data.categoryName || data.category || 'Tuition Fee'
     const category = await prisma.feeCategory.upsert({
-      where: { name: data.categoryName },
+      where: { name: catName },
       update: {},
-      create: { name: data.categoryName },
+      create: { name: catName },
     })
 
     const structure = await prisma.feeStructure.create({
@@ -56,7 +70,7 @@ export async function POST(request: Request) {
         name: data.name,
         categoryId: category.id,
         classId: data.classId || null,
-        amountCents: data.amountCents,
+        amountCents,
         academicTerm: data.academicTerm,
         dueDate: new Date(data.dueDate),
       },

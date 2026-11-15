@@ -175,3 +175,124 @@ export async function POST(request: Request) {
     return handleApiError(error)
   }
 }
+
+const updateGuardianSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().trim().min(2).optional(),
+  phone: z.string().trim().optional(),
+  occupation: z.string().trim().optional(),
+  address: z.string().trim().optional(),
+  studentIds: z.array(z.string()).optional(),
+})
+
+export async function PATCH(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const body = await request.json()
+    const data = updateGuardianSchema.parse(body)
+
+    const existing = await prisma.guardianProfile.findFirst({
+      where: { OR: [{ id: data.id }, { guardianCode: data.id }] },
+      include: { user: true },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Guardian record not found.')
+    }
+
+    const updated = await prisma.guardianProfile.update({
+      where: { id: existing.id },
+      data: {
+        ...(data.occupation ? { occupation: data.occupation } : {}),
+        ...(data.address ? { address: data.address } : {}),
+        user: {
+          update: {
+            ...(data.name ? { name: data.name } : {}),
+            ...(data.phone ? { phone: data.phone } : {}),
+          },
+        },
+      },
+      include: { user: true },
+    })
+
+    if (data.studentIds) {
+      const students = await prisma.student.findMany({
+        where: { OR: [{ id: { in: data.studentIds } }, { studentCode: { in: data.studentIds } }] },
+      })
+      for (const st of students) {
+        await prisma.studentGuardian.upsert({
+          where: {
+            studentId_guardianId: {
+              studentId: st.id,
+              guardianId: existing.id,
+            },
+          },
+          update: {},
+          create: {
+            studentId: st.id,
+            guardianId: existing.id,
+            relationship: 'Parent',
+            isPrimary: true,
+          },
+        })
+      }
+    }
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'GUARDIAN_UPDATED',
+      entityType: 'Guardian',
+      entityId: updated.guardianCode,
+      beforeSummary: existing.user.name,
+      afterSummary: updated.user.name,
+    })
+
+    return NextResponse.json({
+      guardian: {
+        id: updated.guardianCode,
+        dbId: updated.id,
+        name: updated.user.name,
+        email: updated.user.email,
+        phone: updated.user.phone,
+        occupation: updated.occupation,
+      },
+    })
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await requireSession(request, ['admin'])
+    const url = new URL(request.url)
+    const id = url.searchParams.get('id') || ''
+    if (!id) throw new HttpError(400, 'Guardian ID is required.')
+
+    const existing = await prisma.guardianProfile.findFirst({
+      where: { OR: [{ id }, { guardianCode: id }] },
+      include: { user: true },
+    })
+    if (!existing) {
+      throw new HttpError(404, 'Guardian record not found.')
+    }
+
+    await prisma.user.delete({ where: { id: existing.userId } })
+
+    await logAudit({
+      actorId: session.userId,
+      actorName: session.name,
+      actorRole: 'ADMIN',
+      action: 'GUARDIAN_DELETED',
+      entityType: 'Guardian',
+      entityId: existing.guardianCode,
+      beforeSummary: `${existing.user.name} (${existing.user.email})`,
+      afterSummary: 'Deleted',
+    })
+
+    return NextResponse.json({ ok: true })
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
