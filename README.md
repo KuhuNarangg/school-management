@@ -1,106 +1,120 @@
-# Northstar School Management System
+# Northstar Academy — School Management System (MERN Stack)
 
-A full-stack, multi-role school management platform built with **Next.js 16 (App Router)**, **React 19**, **PostgreSQL 15**, and **Prisma ORM**.
-
-Northstar provides three role-scoped workspaces (**Administrator**, **Teacher**, and **Guardian**) backed by server-side authorization, immutable audit logging, configurable grade bands, attendance tracking, and an integer-cent financial ledger.
+A full-stack, role-aware **MERN** (**MongoDB Atlas**, **Express.js**, **React + Vite**, **Node.js**) school management system with three dedicated workspaces (**Administrator**, **Teacher**, and **Guardian**), server-enforced Role-Based Access Control (RBAC), daily attendance, examination grading & publishing, integer-cents fee ledger with partial payments and reversals, CSV reports, and an append-only audit log.
 
 ---
 
-## Quick Start & Setup
+## Architecture & Stack
 
-### 1. Prerequisites
-- **Node.js** 20+ (tested on Node 24)
-- **PostgreSQL 15+** (local installation or Docker via `docker-compose.yml`)
+```
+school-management/
+├── client/                  # React 19 + Vite 6 + React Router 7 + Tailwind CSS v4 SPA
+│   ├── src/
+│   │   ├── App.tsx          # Role-guarded routes (/admin/*, /teacher/*, /guardian/*)
+│   │   ├── api-client.ts    # Fetch interceptor (VITE_API_URL + credentials + CSRF + Bearer)
+│   │   ├── components/      # Northstar UI & Role Workspace components
+│   │   └── lib/             # Shared types & navigation definitions
+│   ├── index.html
+│   ├── vite.config.ts       # Port 3000 + /api proxy to Express server (port 5000)
+│   └── package.json
+├── server/                  # Express 5 + Mongoose 8 + Node.js REST API Server
+│   ├── src/
+│   │   ├── index.ts         # Express server entry point (port 5000)
+│   │   ├── app.ts           # Express app & REST route mounting + static SPA serving
+│   │   ├── db.ts            # MongoDB Atlas connection & Mongoose query engine
+│   │   ├── models/index.ts  # 20 Mongoose schemas & compound unique indexes
+│   │   ├── routes/          # 21 REST API endpoint modules (/api/*)
+│   │   ├── utils/           # Auth (JWT + bcrypt), RBAC, Grading, Fees, Audit logger
+│   │   └── seed.ts          # Idempotent MongoDB Atlas seed script
+│   └── package.json
+├── tests/                   # Vitest backend & QA integration test suites (24 tests)
+├── e2e/                     # Playwright end-to-end browser test suites (7 scenarios)
+└── package.json             # Root scripts to run/build/test both server and client
+```
 
-### 2. Environment Variables
-Copy `.env.example` to `.env` and configure your PostgreSQL connection string and session secret:
+---
+
+## Demo Credentials (Password for all: `Demo@1234`)
+
+| Role | Email | Password | Scope |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@school.demo` | `Demo@1234` | Full school-wide administration, academic setup, exam publishing, fees, reports & audit logs |
+| **Teacher** | `teacher@school.demo` | `Demo@1234` | Olivia Rhye — Assigned to **Grade 10 · Section A & B** (*Biology* & *Physics*) |
+| **Teacher 2** | `teacher2@school.demo` | `Demo@1234` | Marcus Vance — Assigned to *Mathematics* across Grades 9, 10, 11 |
+| **Guardian** | `guardian@school.demo` | `Demo@1234` | Jamie Morgan — Linked to **Olivia Rhye** (`STU-24018`) & **Phoenix Baker** (`STU-24017`) |
+| **Guardian 2** | `guardian2@school.demo` | `Demo@1234` | Robert Steiner — Linked to **Lana Steiner** (`STU-24016`) & **Demi Wilkinson** (`STU-24015`) |
+
+---
+
+## Local Setup & Running
+
+### 1. Environment Variables
+Copy `.env.example` to `.env` (and `server/.env.example` to `server/.env`):
 
 ```bash
 cp .env.example .env
+cp server/.env.example server/.env
 ```
 
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| `DATABASE_URL` | PostgreSQL connection URL | `postgresql://postgres:postgres@localhost:5432/northstar_school?schema=public` |
-| `SESSION_SECRET` | 32+ byte secret key used by `jose` to sign `httpOnly` JWT session cookies | `northstar-school-super-secret-jwt-key-2026-production-grade` |
-| `NEXT_PUBLIC_APP_URL` | Base URL of the application | `http://localhost:3000` |
-
-### 3. Database Setup (Local Postgres or Docker)
-If you do not have a local PostgreSQL instance running, start the included Docker container:
-
-```bash
-docker compose up -d
+Set your MongoDB Atlas URI in `.env` and `server/.env`:
+```env
+MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.l6mbzkz.mongodb.net/northstar_school?retryWrites=true&w=majority"
+SESSION_SECRET="replace-with-a-random-32-byte-secret"
+PORT=5000
+CLIENT_ORIGIN="http://localhost:3000"
+VITE_API_URL=""
 ```
 
-Install dependencies, run Prisma migrations, and seed the database:
-
+### 2. Install Dependencies & Seed MongoDB Atlas
 ```bash
 npm install
-npm run db:migrate
 npm run db:seed
 ```
 
-To completely reset the database and re-seed synthetic data at any time:
-
+### 3. Start the MERN Development Servers
 ```bash
-npm run db:reset
-```
-
-### 4. Run the Application
-
-```bash
-# Development server
 npm run dev
-
-# Production build & start
-npm run build
-npm start
 ```
+- **React + Vite Client:** `http://localhost:3000`
+- **Express + Mongoose API Server:** `http://localhost:5000` (with `/api/health` health check)
 
 ---
 
-## Demo Credentials per Role
+## Manual Cloud Deployment Guide
 
-All demo accounts share the password **`Demo@1234`**.
+You can deploy this repository either as **one unified full-stack web service** OR as **separate Frontend (`client`) + Backend (`server`) services**:
 
-| Role | Email | Password | Scope & Highlights |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@school.demo` | `Demo@1234` | Full school-wide access: 60 students, 45 guardians, 5 teachers, 3 classes (6 sections), 6 subjects, exams, fee ledger, reports, and append-only audit logs. |
-| **Teacher (Primary Demo)** | `teacher@school.demo` | `Demo@1234` | **Olivia Rhye** — Assigned to **Grade 10 · Section A & Section B** (Biology & Physics). Cannot access Grade 9 or Grade 11 students, fee data, or admin endpoints. |
-| **Teacher (Isolation Test)** | `teacher2@school.demo` | `Demo@1234` | **Marcus Vance** — Assigned to Mathematics sections. |
-| **Guardian (Primary Demo)** | `guardian@school.demo` | `Demo@1234` | **Jamie Morgan** — Linked to **2 children**: **Olivia Rhye (`STU-24018`, Grade 10 · A)** and **Phoenix Baker (`STU-24017`, Grade 9 · B)**. Can switch between children in the header, view only `PUBLISHED` exam results, and pay family invoices. |
-| **Guardian (Isolation Test)** | `guardian2@school.demo` | `Demo@1234` | **Robert Steiner** — Linked to **Lana Steiner (`STU-24016`, Grade 11 · A)** and **Demi Wilkinson (`STU-24015`, Grade 9 · A)**. |
+### Option A: Single Unified Service (Render / Railway / Fly.io)
+Because the Express server (`server/src/app.ts`) automatically serves the built React app from `client/dist` whenever present:
+1. **Root Directory:** `.` (repository root)
+2. **Build Command:** `npm install && npm run build`
+3. **Start Command:** `npm start`
+4. **Environment Variables:**
+   - `MONGODB_URI` = your MongoDB Atlas connection string
+   - `SESSION_SECRET` = any strong random secret string
+   - `PORT` = `5000` (or provided automatically by Render/Railway)
+
+### Option B: Split Frontend (Vercel / Netlify) + Backend (Render / Railway)
+1. **Backend Service (`server/`):**
+   - **Root Directory:** `.` (or `server`)
+   - **Build Command:** `npm install && npm run build:server`
+   - **Start Command:** `npm start`
+   - **Environment Variables:** `MONGODB_URI`, `SESSION_SECRET`, `PORT=5000`
+2. **Frontend Static Site (`client/`):**
+   - **Root Directory:** `.` (or `client`)
+   - **Build Command:** `npm install && npm run build:client`
+   - **Output Directory:** `client/dist` (or `dist` if Root Directory is `client`)
+   - **Environment Variables:**
+     - `VITE_API_URL` = `https://your-backend-service.onrender.com` (no trailing slash)
 
 ---
 
-## Test Commands
-
-### Unit & API Integration Tests (Vitest)
-Verifies authentication, role-based access control (RBAC), IDOR scope isolation (`404` on out-of-scope IDs), duplicate attendance rejection (`409`), marks bounds validation, unpublished result hiding from guardians, self-role-change prevention, overpayment rejection, concurrent payment serialization, grade band evaluation, and cross-role consistency:
+## Testing & Verification
 
 ```bash
+# Run all 24 backend & QA integration tests against MongoDB Atlas
 npm test
-```
 
-### End-to-End Browser Tests (Playwright)
-Runs automated browser verification across Admin, Teacher, and Guardian flows:
-
-```bash
+# Run all 7 Playwright E2E browser scenarios across Admin, Teacher, and Guardian
 npm run test:e2e
 ```
-
----
-
-## Key Security & Domain Rules Enforced
-1. **Server-Side Authorization (`lib/server/rbac.ts`):** Every route handler verifies the signed `httpOnly` JWT session (`northstar-session`) against the database, checks role permissions (`401` unauthenticated, `403` wrong role), and enforces relational scope (`404` when a teacher queries an unassigned section/student or a guardian queries another family's student).
-2. **Attendance Integrity:** Enforced by a database unique constraint on `(studentId, date, session)` with default session `DAILY`. Teachers can only mark/edit same-day attendance for assigned sections; historical edits require `ADMIN` role and a mandatory audit reason.
-3. **Examination Lifecycle & Configurable Grade Bands:** Marks progress from `DRAFT` → `SUBMITTED` → `PUBLISHED`. Guardians never see `DRAFT` or `SUBMITTED` marks. Once `PUBLISHED`, exams are locked; only an Admin can unlock them with a mandatory reason. Grades, GPA points, and pass/fail status are computed dynamically from the `GradeBand` table.
-4. **Financial Ledger in Integer Cents:** All monetary amounts (`amountCents`, `totalCents`) are stored as integer minor units (cents), never floats. Payments run inside `Serializable` database transactions with row-level `FOR UPDATE` locking, rejecting overpayments and deriving invoice status (`UNPAID`, `PARTIAL`, `PAID`) from net payments minus reversals.
-5. **Append-Only Audit Trail:** Every state-changing action writes to `AuditLog`. Modification (`PUT`/`PATCH`) and deletion (`DELETE`) on `/api/audit-logs` return `405 Method Not Allowed`.
-
----
-
-## Known Limitations
-- Payment processing is simulated in-app (no external Stripe/Razorpay gateway integration by design).
-- Students are viewed through the Guardian portal (the `Student.userId` nullable foreign key is already in place to support direct student logins in a future release without schema breaking changes).
-- Rate limiting uses an in-memory sliding window store per server process; multi-instance horizontal deployments should back the rate limiter with Redis.

@@ -10,8 +10,10 @@ export default defineConfig({
     testTimeout: 30000,
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, '.'),
-    },
+    alias: [
+      { find: /^@\/lib\/server\/(.*)$/, replacement: path.resolve(__dirname, 'server/src/utils/$1') },
+      { find: /^@\/app\/api\/(.*)$/, replacement: path.resolve(__dirname, 'server/src/routes/$1') },
+      { find: /^@\/(.*)$/, replacement: path.resolve(__dirname, 'client/src/$1') },
+    ],
   },
 })
