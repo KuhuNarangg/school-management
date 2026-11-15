@@ -99,7 +99,7 @@ export async function POST(request: Request) {
       userRole === 'admin' ? 'dashboard' : userRole === 'teacher' ? 'today' : 'home'
     }`
 
-    await logAudit({
+    void logAudit({
       actorId: user.id,
       actorName: user.name,
       actorRole: user.role,
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
       entityType: 'User',
       entityId: user.id,
       afterSummary: `Signed in as ${user.role} (${user.email})`,
-    })
+    }).catch(() => null)
 
     const maxAge = remember ? 60 * 60 * 24 * 7 : 60 * 60 * 12
     const response = NextResponse.json({

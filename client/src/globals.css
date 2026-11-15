@@ -46,3 +46,1483 @@
 @media(max-width:390px){.hero-copy h1{font-size:37px}.home-primary,.home-secondary{font-size:9px}.hero-art{padding:10px}.preview-body{grid-template-columns:70px minmax(0,1fr)}.preview-lower>div{padding:6px 4px}.login-form-panel{padding-right:14px;padding-left:14px}.login-role-grid{gap:4px}.login-role{padding:8px 5px}.login-role-copy strong{font-size:8px}.child-chip{padding:0 4px}.child-chip>span:last-child{font-size:7px}.role-page{padding-right:9px;padding-left:9px}}
 .teacher-rail{position:fixed;inset:0 auto 0 0;z-index:30;width:66px;display:flex;flex-direction:column;align-items:center;gap:16px;padding:15px 8px 12px;border-right:1px solid #e5ece8;background:#fff}.teacher-rail-brand{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;color:white;background:#278875}.teacher-rail nav{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px}.teacher-rail-link{position:relative;width:42px;height:42px;display:grid;place-items:center;border-radius:9px;color:#80918a;text-decoration:none}.teacher-rail-link:hover{color:#268571;background:#f1f8f4}.teacher-rail-link.active{color:#23816d;background:#eaf5ef}.teacher-rail-link>span{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}.teacher-rail-link>i{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:#da9660}.teacher-rail-bottom{width:100%;display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:auto;padding-top:10px;border-top:1px solid #edf1ef}.teacher-rail-bottom>button{width:35px;height:35px;display:grid;place-items:center;border-radius:8px;color:#84948e}.teacher-rail-bottom>button:hover{color:#268571;background:#eef6f1}.role-main-teacher{margin-left:66px}.teacher-mobile-header{display:none}
 @media(max-width:680px){.role-main-teacher{margin-left:0}.teacher-rail{width:248px;align-items:stretch;gap:12px;padding:14px 12px;border-right:0;box-shadow:8px 0 25px #17291a12;transform:translateX(-110%);transition:transform .2s}.teacher-rail.is-open{transform:translateX(0)}.teacher-rail-brand{width:100%;display:flex;justify-content:flex-start;padding-left:11px;color:#1f6759;background:transparent;font-weight:700}.teacher-rail nav{align-items:stretch}.teacher-rail-link{width:100%;height:38px;display:flex;justify-content:flex-start;gap:11px;padding:0 10px}.teacher-rail-link>span{position:static;width:auto;height:auto;overflow:visible;color:inherit;font-size:10px}.teacher-rail-link>i{right:12px}.teacher-rail-bottom{flex-direction:row;justify-content:flex-start}.teacher-mobile-header{height:53px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;border-bottom:1px solid #e6ece8;background:#fff}.teacher-mobile-header>button{width:29px;height:29px;display:grid;place-items:center;color:#71827b}.teacher-mobile-header>span{color:#316356;font-size:13px;font-weight:700}.role-app-teacher>.role-main>.role-topbar{display:none}.role-app-teacher .role-page{padding-top:16px}}
+
+
+/* ============================================================================
+   High-Readability Typography, Visual Hierarchy & Highlight System Override
+   ============================================================================ */
+
+body,
+.home-page,
+.login-page,
+.role-app {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #0f172a;
+}
+
+/* --- Login Page Readability & Highlights --- */
+.login-card {
+  width: min(100%, 520px);
+  padding: 28px 30px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.08);
+}
+.login-heading .login-step,
+.login-step-two .login-step {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0d9488;
+  letter-spacing: 0.08em;
+}
+.login-heading h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 8px 0 6px;
+}
+.login-heading > p {
+  font-size: 15px;
+  color: #475569;
+}
+.login-role-grid {
+  gap: 12px;
+  margin-top: 20px;
+}
+.login-role {
+  min-height: 118px;
+  padding: 14px 13px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+}
+.login-role-active {
+  border-color: #0d9488;
+  background: #f0fdfa;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+}
+.login-role-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+.login-role-copy strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.login-role-copy small {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.35;
+}
+.login-field {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  gap: 8px;
+}
+.login-field > input,
+.password-control {
+  height: 46px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+}
+.login-field > input,
+.password-control > input {
+  font-size: 15px;
+  color: #0f172a;
+  padding: 0 14px;
+}
+.remember-row {
+  font-size: 13px;
+  color: #475569;
+}
+.remember-row > button {
+  font-size: 13px;
+  font-weight: 600;
+}
+.login-error {
+  font-size: 13.5px;
+  padding: 12px 14px;
+  font-weight: 500;
+}
+.login-submit {
+  height: 48px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  background: #0f766e;
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+}
+.login-submit:hover {
+  background: #115e59;
+}
+.demo-box {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+.demo-box-heading strong {
+  font-size: 14px;
+  color: #0f172a;
+}
+.demo-box-heading > div > span {
+  font-size: 12.5px;
+  color: #475569;
+}
+.demo-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.demo-values span {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 11px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #0f172a;
+}
+.demo-fill {
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-top: 12px;
+  color: #0f766e;
+}
+.login-back {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+.login-footer {
+  font-size: 13px;
+  color: #475569;
+}
+
+/* --- Sidebar & Navigation (Admin & Teacher) --- */
+.role-sidebar {
+  width: 268px;
+  padding: 20px 16px 16px;
+  background: #0f172a;
+  border-right: 1px solid #1e293b;
+}
+.role-main-admin {
+  margin-left: 268px;
+}
+.role-brand {
+  font-size: 21px;
+  font-weight: 800;
+}
+.role-school {
+  height: 58px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.role-school strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+.role-school small {
+  font-size: 12px;
+  color: #94a3b8;
+}
+.role-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+  padding: 6px 12px 6px;
+}
+.role-nav-link {
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+.role-nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+.role-nav-active {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+.role-nav-active > svg {
+  color: #ffffff !important;
+}
+.role-nav-link kbd {
+  font-size: 11px;
+  padding: 2px 6px;
+  color: #cbd5e1;
+}
+.role-nav-count {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  min-width: 22px;
+  height: 20px;
+}
+.sidebar-collapse {
+  font-size: 13px;
+  height: 38px;
+  color: #cbd5e1;
+}
+
+/* Upgrade Teacher Rail to Full Labeled Sidebar on Desktop */
+.teacher-rail {
+  width: 248px;
+  align-items: stretch;
+  padding: 20px 14px 16px;
+  background: #0f2926;
+  color: #e2f1ee;
+  border-right: 1px solid #163e39;
+}
+.role-main-teacher {
+  margin-left: 248px;
+}
+.teacher-rail-brand {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0 10px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.teacher-rail-brand-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #10b981;
+  color: #06281e;
+}
+.teacher-rail-brand-text span {
+  color: #34d399;
+}
+.teacher-rail nav {
+  align-items: stretch;
+  gap: 5px;
+  margin-top: 12px;
+}
+.teacher-rail-link {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 12px;
+  border-radius: 9px;
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 500;
+}
+.teacher-rail-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+.teacher-rail-link.active {
+  background: #0d9488;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+.teacher-rail-link > span {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  font-size: 14px;
+}
+.teacher-rail-bottom {
+  align-items: stretch;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 12px;
+}
+.teacher-rail-bottom > button {
+  width: 100%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0 12px;
+  color: #cbd5e1;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.teacher-rail-bottom > button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* --- Topbar, Breadcrumbs, Guardian Header & Switch Role Pill --- */
+.role-topbar {
+  height: 68px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+.role-breadcrumb {
+  font-size: 14px;
+  color: #64748b;
+}
+.role-breadcrumb a {
+  color: #475569;
+  font-weight: 500;
+}
+.role-breadcrumb > span {
+  color: #0f172a;
+  font-weight: 700;
+}
+.role-search-trigger {
+  width: 260px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9px;
+  font-size: 13.5px;
+  color: #475569;
+  background: #f8fafc;
+}
+.role-search-trigger kbd,
+.role-page-kicker kbd {
+  font-size: 11.5px;
+  padding: 2px 6px;
+  font-weight: 600;
+  color: #475569;
+  background: #ffffff;
+}
+.switch-role-pill {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 13px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.switch-role-pill:hover {
+  border-color: #4f46e5;
+  color: #4f46e5;
+  background: #eef2ff;
+}
+.role-bell {
+  width: 36px;
+  height: 36px;
+}
+.role-bell > i {
+  min-width: 17px;
+  height: 17px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.role-add-global {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+.role-profile summary strong {
+  font-size: 13.5px !important;
+  font-weight: 700;
+}
+.role-profile summary small {
+  font-size: 12px !important;
+}
+.role-profile summary > [data-slot=avatar] {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 13px !important;
+  font-weight: 700;
+}
+.role-badge {
+  font-size: 11.5px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.profile-popover {
+  width: 260px;
+  padding: 14px;
+}
+.profile-popover-user strong {
+  font-size: 14px;
+}
+.profile-popover-user small {
+  font-size: 12.5px;
+}
+.profile-popover > button {
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 6px 4px;
+}
+
+/* Guardian Header & Desktop Navigation */
+.guardian-header {
+  height: 70px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+.guardian-brand {
+  font-size: 20px;
+  font-weight: 800;
+}
+.guardian-top-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.guardian-nav-pill {
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  border-radius: 9px;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.guardian-nav-pill:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+.guardian-nav-pill-active {
+  background: #0284c7;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+}
+.child-picker {
+  gap: 8px;
+}
+.child-chip {
+  height: 38px;
+  padding: 0 13px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1.5px solid #e2e8f0;
+  color: #334155;
+}
+.child-chip-active {
+  border-color: #0284c7;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
+}
+.child-chip-avatar {
+  width: 24px;
+  height: 24px;
+  font-size: 11.5px;
+}
+.guardian-content {
+  max-width: 1360px;
+  padding-top: 28px;
+}
+.guardian-content .role-page-heading {
+  display: flex !important;
+}
+
+/* --- Page Headings & Primary Actions --- */
+.role-page {
+  padding: 28px 32px 32px;
+}
+.role-page-heading {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.role-page-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4f46e5;
+  letter-spacing: 0.08em;
+}
+.role-app-teacher .role-page-kicker {
+  color: #0d9488;
+}
+.role-app-guardian .role-page-kicker {
+  color: #0284c7;
+}
+.role-page-kicker > button {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+.role-page-heading h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 8px 0 6px;
+  letter-spacing: -0.02em;
+}
+.role-page-heading p {
+  font-size: 15px;
+  color: #475569;
+}
+.role-primary-button,
+.teacher-primary-button {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+.teacher-primary-button {
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+}
+
+/* --- Overview Greeting & Highlighted KPI Stat Cards --- */
+.workspace-overview {
+  gap: 20px;
+}
+.overview-greeting {
+  padding: 18px 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid var(--role-accent, #4f46e5);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+.overview-date {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4f46e5;
+}
+.overview-greeting h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 6px 0 4px;
+}
+.overview-greeting h2 > span {
+  font-size: 16px;
+  color: #475569;
+  font-weight: 500;
+}
+.overview-greeting p {
+  font-size: 14.5px;
+  color: #475569;
+}
+
+.workspace-stats {
+  gap: 16px;
+}
+.workspace-stat {
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid #4f46e5;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.workspace-stat:nth-child(2) {
+  border-top-color: #2563eb;
+}
+.workspace-stat:nth-child(3) {
+  border-top-color: #0d9481;
+}
+.workspace-stat:nth-child(4) {
+  border-top-color: #d97706;
+}
+.workspace-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+.workspace-stat > div {
+  padding: 18px 20px;
+}
+.workspace-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+.workspace-stat-trend {
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #ecfdf5;
+  color: #047857;
+}
+.workspace-stat small {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #475569;
+  margin-top: 14px;
+}
+.workspace-stat strong {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 4px;
+}
+.workspace-stat > div > span:last-child {
+  font-size: 12.5px;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+/* --- Quick Actions Bar --- */
+.workspace-quick-actions {
+  padding: 16px 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: linear-gradient(to right, #ffffff, #f8fafc);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+.workspace-quick-actions > div:first-child h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.workspace-quick-actions > div:first-child > span {
+  font-size: 13px;
+  color: #475569;
+}
+.quick-action-chips {
+  gap: 8px;
+}
+.quick-action-chips > button {
+  height: 36px;
+  padding: 0 13px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  color: #1e293b;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+}
+.quick-action-chips > button:hover {
+  border-color: #4f46e5;
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+/* --- Cards, Charts, Schedules & Recent Lists --- */
+.workspace-panel-grid,
+.guardian-family-grid,
+.overview-recent {
+  gap: 18px;
+}
+.workspace-chart-card,
+.workspace-side-panel,
+.workspace-schedule-card,
+.recent-records,
+.recent-activity-card,
+.guardian-child-card,
+.family-next-card,
+.records-card,
+.attendance-tool-panel,
+.marks-panel {
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+.workspace-chart-card [data-slot=card-header],
+.workspace-side-panel [data-slot=card-header],
+.workspace-schedule-card [data-slot=card-header],
+.recent-records [data-slot=card-header],
+.recent-activity-card [data-slot=card-header],
+.family-next-card [data-slot=card-header],
+.records-card [data-slot=card-header] {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.workspace-chart-card [data-slot=card-title],
+.workspace-side-panel [data-slot=card-title],
+.workspace-schedule-card [data-slot=card-title],
+.recent-records [data-slot=card-title],
+.recent-activity-card [data-slot=card-title],
+.family-next-card [data-slot=card-title],
+.records-card [data-slot=card-title] {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.workspace-chart-card [data-slot=card-header] p,
+.workspace-side-panel [data-slot=card-header] p,
+.workspace-schedule-card [data-slot=card-header] p,
+.recent-records [data-slot=card-header] p,
+.recent-activity-card [data-slot=card-header] p,
+.family-next-card [data-slot=card-header] p,
+.records-card [data-slot=card-header] p {
+  font-size: 13px;
+  color: #64748b;
+}
+.workspace-filter-button {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.workspace-chart-legend > span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+}
+.overview-event {
+  min-height: 60px;
+  grid-template-columns: 58px 14px 1fr;
+  gap: 12px;
+  padding-top: 12px;
+}
+.overview-event > span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+.overview-event strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+.overview-event small {
+  font-size: 12.5px;
+  color: #64748b;
+}
+.workspace-side-panel [data-slot=card-content] > a,
+.workspace-schedule-card [data-slot=card-header] > a,
+.recent-records [data-slot=card-header] > a {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* Teacher Schedule & Pending Items */
+.teacher-attendance-mini,
+.family-day-chip {
+  padding: 14px 18px;
+  border-radius: 10px;
+}
+.teacher-attendance-mini > span,
+.family-day-chip > span {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.teacher-attendance-mini > strong {
+  font-size: 24px;
+  font-weight: 800;
+}
+.teacher-attendance-mini > strong small {
+  font-size: 13.5px;
+}
+.teacher-attendance-mini > button {
+  font-size: 13px;
+  font-weight: 700;
+}
+.teacher-class-row {
+  min-height: 60px;
+  gap: 14px;
+}
+.class-time {
+  width: 58px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+.class-mark {
+  width: 36px;
+  height: 36px;
+}
+.teacher-class-row > div > strong {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.teacher-class-row > div > span {
+  font-size: 13px;
+  color: #475569;
+}
+.next-class-badge {
+  font-size: 11.5px;
+  padding: 4px 8px;
+  font-weight: 700;
+}
+.pending-dot {
+  width: 26px;
+  height: 26px;
+  font-size: 12.5px;
+}
+.teacher-pending [data-slot=card-content] > a strong {
+  font-size: 14px;
+  color: #0f172a;
+}
+.teacher-pending [data-slot=card-content] > a small {
+  font-size: 12.5px;
+  color: #475569;
+}
+.teacher-class-note {
+  font-size: 13px;
+  padding: 12px 14px;
+}
+
+/* Guardian Cards */
+.guardian-child-card [data-slot=card-header] {
+  padding: 18px 20px;
+}
+.guardian-large-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 17px;
+}
+.guardian-child-card [data-slot=card-header] > div > span {
+  font-size: 11.5px;
+  color: #0284c7;
+}
+.guardian-child-card [data-slot=card-title] {
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.guardian-child-card [data-slot=card-header] p {
+  font-size: 13.5px;
+  color: #475569;
+}
+.child-attendance > div:first-child > span {
+  font-size: 12px;
+  color: #475569;
+}
+.child-attendance > div:first-child > strong {
+  font-size: 18px;
+  font-weight: 800;
+}
+.child-progress {
+  height: 8px;
+}
+.child-attendance > small {
+  font-size: 12.5px;
+  color: #475569;
+}
+.child-latest-result > span {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+}
+.child-latest-result > strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+.child-latest-result > strong > small {
+  font-size: 12.5px;
+}
+.guardian-child-card > footer {
+  padding: 13px 20px;
+}
+.guardian-child-card > footer > a {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.fee-reminder-card [data-slot=card-content] {
+  padding: 18px 20px;
+}
+.fee-reminder-top > span {
+  font-size: 12px;
+}
+.fee-reminder-top [data-slot=badge] {
+  font-size: 11.5px;
+  padding: 3px 8px;
+}
+.fee-reminder-card [data-slot=card-content] > strong {
+  font-size: 28px;
+  font-weight: 800;
+}
+.fee-reminder-card [data-slot=card-content] > strong > small {
+  font-size: 13.5px;
+}
+.fee-reminder-card [data-slot=card-content] > p {
+  font-size: 13.5px;
+  color: #78350f;
+}
+.fee-reminder-card [data-slot=card-content] > a {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.family-next-card [data-slot=card-content] > div > span {
+  width: 42px;
+  height: 42px;
+  font-size: 10px;
+}
+.family-next-card [data-slot=card-content] > div > span > strong {
+  font-size: 15px;
+}
+.family-next-card [data-slot=card-content] > div > p > b {
+  font-size: 14px;
+  color: #0f172a;
+}
+.family-next-card [data-slot=card-content] > div > p > small {
+  font-size: 12.5px;
+  color: #475569;
+}
+.family-next-card [data-slot=card-content] > a {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.guardian-reassurance strong {
+  font-size: 14px;
+}
+.guardian-reassurance small {
+  font-size: 12.5px;
+}
+
+/* Recent Students & Recent Activity on Overview */
+.recent-student-row {
+  min-height: 56px;
+  gap: 12px;
+}
+.recent-student-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.recent-student-row > div:nth-child(2) > strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.recent-student-row > div:nth-child(2) > small {
+  font-size: 12.5px;
+  color: #475569;
+}
+.recent-attendance {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+.record-status-active,
+.record-status-review {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.recent-activity-card [data-slot=card-content] > div {
+  padding: 12px 0;
+  gap: 12px;
+}
+.activity-marker {
+  width: 34px;
+  height: 34px;
+}
+.recent-activity-card [data-slot=card-content] > div > p > strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.recent-activity-card [data-slot=card-content] > div > p > small,
+.recent-activity-card [data-slot=card-content] > div > p > time {
+  font-size: 12.5px;
+  color: #475569;
+}
+
+/* --- Data Controls, Search, Filters & Records Tables --- */
+.role-data-content {
+  gap: 16px;
+}
+.data-controls {
+  padding: 14px 18px;
+  gap: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+}
+.data-search {
+  width: 280px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+}
+.data-search > input {
+  font-size: 14px;
+  color: #0f172a;
+}
+.filter-chip {
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+.filter-chip-active {
+  border-color: #4f46e5;
+  background: #eef2ff;
+  color: #4338ca;
+  font-weight: 700;
+}
+.filter-chip > span {
+  font-size: 11.5px;
+  padding: 2px 6px;
+  font-weight: 700;
+}
+.clear-filters {
+  height: 36px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+.data-action {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+.column-menu summary {
+  height: 36px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.column-menu label {
+  width: 190px;
+  padding: 12px;
+  font-size: 13px;
+}
+
+/* Table Headers & Rows */
+.records-header,
+.records-row {
+  padding: 0 18px;
+  gap: 12px;
+}
+.records-header {
+  min-height: 44px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.records-row {
+  min-height: 62px;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 500;
+}
+.records-row:hover {
+  background: #f1f5f9;
+}
+.records-row > span:first-child input,
+.records-header > span:first-child input {
+  width: 16px;
+  height: 16px;
+}
+.record-person {
+  gap: 12px;
+}
+.record-person > [data-slot=avatar] {
+  width: 36px;
+  height: 36px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.record-person strong,
+.records-row > span > strong {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.record-person small,
+.records-row > span > small {
+  font-size: 12.5px;
+  color: #475569;
+}
+.row-payment-button {
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: 1.5px solid #cbd5e1;
+}
+.row-payment-button:hover {
+  border-color: #4f46e5;
+  background: #eef2ff;
+}
+.bulk-action-bar {
+  height: 46px;
+  font-size: 13.5px;
+}
+.bulk-action-bar button {
+  font-size: 13px;
+  font-weight: 700;
+}
+.records-empty > strong {
+  font-size: 16px;
+  color: #0f172a;
+}
+.records-empty > span {
+  font-size: 13.5px;
+}
+.records-empty > button {
+  padding: 9px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+/* --- Attendance Roster & Marks Entry Panels --- */
+.attendance-tool-heading {
+  padding: 16px 20px;
+}
+.attendance-date-chip {
+  width: 40px;
+  height: 40px;
+}
+.attendance-tool-heading > div:nth-child(2) > strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.attendance-tool-heading > div:nth-child(2) > small {
+  font-size: 13px;
+  color: #475569;
+}
+.unsaved-indicator {
+  font-size: 13px;
+  font-weight: 600;
+}
+.attendance-live-summary {
+  padding: 14px 20px;
+  gap: 22px;
+}
+.attendance-live-summary > span {
+  font-size: 13.5px;
+  color: #475569;
+}
+.attendance-live-summary > span > strong {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.attendance-live-summary > button {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.attendance-student {
+  min-height: 62px;
+  gap: 14px;
+}
+.roster-index {
+  width: 24px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.attendance-student [data-slot=avatar] {
+  width: 36px;
+  height: 36px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.attendance-student > div:nth-of-type(1) > strong {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.attendance-student > div:nth-of-type(1) > small {
+  font-size: 12.5px;
+  color: #475569;
+}
+.attendance-toggle-group {
+  gap: 6px;
+}
+.attendance-toggle-group > button {
+  height: 34px;
+  padding: 0 13px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.attendance-footer {
+  min-height: 54px;
+  padding: 0 20px;
+}
+.attendance-footer > span {
+  font-size: 12.5px;
+  color: #475569;
+}
+.attendance-footer kbd {
+  font-size: 11.5px;
+  padding: 3px 6px;
+}
+.attendance-footer > button {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* Marks Panel */
+.marks-panel {
+  padding: 0 20px 14px;
+}
+.marks-heading {
+  min-height: 64px;
+}
+.marks-heading > div > strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.marks-heading > div > small {
+  font-size: 13px;
+  color: #475569;
+}
+.marks-heading > span {
+  font-size: 13.5px;
+}
+.marks-heading > span > strong {
+  font-size: 22px;
+  font-weight: 800;
+}
+.marks-table-head {
+  min-height: 42px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+.marks-row {
+  min-height: 56px;
+  font-size: 14px;
+  color: #1e293b;
+}
+.marks-row > strong {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.marks-row > input {
+  width: 92px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 10px;
+}
+.mark-error {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* --- Fee Summary Cards, Exam Strips & Supporting Cards --- */
+.fee-summary-cards {
+  gap: 14px;
+}
+.fee-summary-cards [data-slot=card-content] {
+  padding: 18px 20px;
+}
+.fee-summary-cards small {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
+.fee-summary-cards strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.fee-summary-cards span {
+  font-size: 12.5px;
+  color: #64748b;
+}
+.invoice-banner,
+.guardian-fee-banner {
+  padding: 16px 20px;
+  border-width: 1.5px;
+  border-radius: 12px;
+}
+.invoice-banner > div > strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+.invoice-banner > div > span {
+  font-size: 13px;
+}
+.invoice-banner > button {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.guardian-fee-banner > div > span {
+  font-size: 12px;
+}
+.guardian-fee-banner > div > strong {
+  font-size: 28px;
+  font-weight: 800;
+}
+.guardian-fee-banner > div > p {
+  font-size: 13.5px;
+}
+.guardian-fee-banner > button {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.exam-summary-strip {
+  gap: 14px;
+}
+.exam-summary-strip > div {
+  min-height: 76px;
+  padding: 14px 18px;
+  border: 1px solid #cbd5e1;
+  border-top: 3px solid #4f46e5;
+  border-radius: 10px;
+}
+.exam-summary-strip > div > span {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #475569;
+}
+.exam-summary-strip > div > strong {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.exam-summary-strip > div > strong > small {
+  font-size: 13px;
+}
+.exam-status {
+  font-size: 12px;
+  padding: 4px 9px;
+  font-weight: 700;
+}
+.supporting-cards {
+  gap: 16px;
+}
+.supporting-cards [data-slot=card-content] {
+  padding: 20px;
+}
+.supporting-icon {
+  width: 40px;
+  height: 40px;
+}
+.supporting-cards strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.supporting-cards p {
+  font-size: 13.5px;
+  color: #475569;
+}
+.supporting-cards button {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+/* --- Dialogs, Modals, Command Palette & Toasts --- */
+.payment-form > label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1e293b;
+}
+.payment-form input,
+.payment-form select {
+  height: 42px;
+  font-size: 14px;
+  padding: 0 12px;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+}
+.payment-form > button,
+.quick-dialog-placeholder > button {
+  height: 42px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.quick-dialog-placeholder input {
+  height: 42px;
+  font-size: 14px;
+}
+.command-dialog [data-slot=dialog-title],
+.quick-action-dialog [data-slot=dialog-title],
+.shortcut-dialog [data-slot=dialog-title] {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.command-dialog [data-slot=dialog-description],
+.quick-action-dialog [data-slot=dialog-description],
+.shortcut-dialog [data-slot=dialog-description] {
+  font-size: 13.5px;
+  color: #475569;
+}
+.command-search input {
+  font-size: 14.5px;
+}
+.command-section-label {
+  font-size: 11.5px;
+  color: #64748b;
+}
+.command-results > button {
+  min-height: 42px;
+  font-size: 14px;
+  color: #1e293b;
+}
+.command-results > button > span:nth-child(2) > small {
+  font-size: 12px;
+}
+.quick-action-list > button {
+  min-height: 42px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.shortcut-list > p {
+  min-height: 36px;
+  font-size: 13.5px;
+}
+.role-toast,
+.workspace-toast {
+  min-height: 46px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+.role-footer {
+  font-size: 13px;
+  color: #64748b;
+  padding: 16px 32px;
+}
+.role-footer > button {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 680px) {
+  .role-main-admin,
+  .role-main-teacher {
+    margin-left: 0;
+  }
+  .guardian-top-nav {
+    display: none;
+  }
+}

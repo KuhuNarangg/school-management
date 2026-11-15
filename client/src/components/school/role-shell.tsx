@@ -343,7 +343,12 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
       {isTeacher && (
         <aside className={`teacher-rail ${menuOpen ? 'is-open' : ''}`}>
           <Link href="/teacher/today" className="teacher-rail-brand" aria-label="Northstar Teacher workspace">
-            <GraduationCap size={21} />
+            <span className="teacher-rail-brand-icon">
+              <GraduationCap size={20} />
+            </span>
+            <span className="teacher-rail-brand-text">
+              northstar<span>.</span>
+            </span>
           </Link>
           <nav aria-label="Teacher navigation">
             {links.map((item) => {
@@ -368,9 +373,11 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
           <div className="teacher-rail-bottom">
             <button aria-label="Keyboard shortcuts" title="Keyboard shortcuts" onClick={() => setHelpOpen(true)}>
               <CircleHelp size={18} />
+              <span>Shortcuts</span>
             </button>
             <button aria-label="Sign out" title="Sign out" onClick={logout}>
               <LogOut size={18} />
+              <span>Sign out</span>
             </button>
           </div>
         </aside>
@@ -385,6 +392,23 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
               northstar<span>.</span>
             </span>
           </Link>
+          <nav className="guardian-top-nav" aria-label="Guardian pages">
+            {links.map((item) => {
+              const Icon = iconFor(item.label)
+              const active = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={active ? 'guardian-nav-pill guardian-nav-pill-active' : 'guardian-nav-pill'}
+                  onClick={() => navigate(item.href, item.label)}
+                >
+                  <Icon size={16} />
+                  <span>{item.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
           <div className="child-picker" aria-label="Choose a child">
             {liveChildren.map((child, index) => (
               <button
@@ -401,7 +425,12 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
               </button>
             ))}
           </div>
-          <div className="guardian-user">{profileMenu(user, roleBadge, logout, false)}</div>
+          <div className="guardian-user">
+            <Link href="/login" className="switch-role-pill">
+              Switch role
+            </Link>
+            {profileMenu(user, roleBadge, logout, false)}
+          </div>
         </header>
       )}
       {menuOpen && <button className="role-mobile-scrim" aria-label="Close navigation" onClick={() => setMenuOpen(false)} />}
@@ -422,6 +451,9 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
                 <span>Search anything</span>
                 <kbd>⌘ K</kbd>
               </button>
+              <Link href="/login" className="switch-role-pill">
+                Switch role
+              </Link>
               <button
                 className="role-bell"
                 aria-label="Notifications, 2 unread"
@@ -436,7 +468,7 @@ export function RoleShell({ role, children }: { role: SchoolRole; children: Reac
                 </button>
               )}
               <div className="role-top-divider" />
-              {!isTeacher && profileMenu(user, roleBadge, logout, false)}
+              {profileMenu(user, roleBadge, logout, false)}
             </div>
           </header>
         )}

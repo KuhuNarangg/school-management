@@ -669,30 +669,59 @@ async function executeFindMany(
   await connectDB()
   const Model = MODELS[modelName]
   const mongoFilter = buildScalarMongoFilter(modelName, args.where)
-  const rawDocs = await Model.find(mongoFilter).lean()
-  let docs = rawDocs.map(normalizeDoc)
-
   const whereIncludes = collectRelationalWhereIncludes(modelName, args.where)
   const orderIncludes = collectRelationalOrderIncludes(modelName, args.orderBy)
   const preIncludes = mergeIncludeMaps(whereIncludes, orderIncludes)
+  const canPushDownPagination =
+    (!whereIncludes || Object.keys(whereIncludes).length === 0) &&
+    (!orderIncludes || Object.keys(orderIncludes).length === 0) &&
+    !hasRelationalFilter(modelName, args.where)
 
-  if (preIncludes && Object.keys(preIncludes).length > 0) {
-    docs = await populateDocs(modelName, docs, preIncludes)
+  let query = Model.find(mongoFilter)
+  if (canPushDownPagination && args.orderBy) {
+    const specs = Array.isArray(args.orderBy) ? args.orderBy : [args.orderBy]
+    const sortObj: Record<string, 1 | -1> = {}
+    for (const s of specs) {
+      const [k, v] = Object.entries(s)[0] || []
+      if (k && (v === 'asc' || v === 'desc')) {
+        sortObj[k === 'id' ? '_id' : k] = v === 'desc' ? -1 : 1
+      }
+    }
+    if (Object.keys(sortObj).length > 0) {
+      query = query.sort(sortObj)
+    }
+  }
+  if (canPushDownPagination) {
+    if (args.skip !== undefined && args.skip > 0) {
+      query = query.skip(args.skip)
+    }
+    if (args.take !== undefined && args.take >= 0) {
+      query = query.limit(args.take)
+    }
   }
 
-  if (args.where) {
-    docs = docs.filter((d) => matchesWhere(modelName, d, args.where))
-  }
+  const rawDocs = await query.lean()
+  let docs = rawDocs.map(normalizeDoc)
 
-  if (args.orderBy) {
-    docs = sortDocs(docs, args.orderBy)
-  }
+  if (!canPushDownPagination) {
+    if (preIncludes && Object.keys(preIncludes).length > 0) {
+      docs = await populateDocs(modelName, docs, preIncludes)
+    }
 
-  if (args.skip !== undefined && args.skip > 0) {
-    docs = docs.slice(args.skip)
-  }
-  if (args.take !== undefined && args.take >= 0) {
-    docs = docs.slice(0, args.take)
+    if (args.where) {
+      docs = docs.filter((d) => matchesWhere(modelName, d, args.where))
+    }
+
+    if (args.orderBy) {
+      docs = sortDocs(docs, args.orderBy)
+    }
+
+    if (args.skip !== undefined && args.skip > 0) {
+      docs = docs.slice(args.skip)
+    }
+    if (args.take !== undefined && args.take >= 0) {
+      docs = docs.slice(0, args.take)
+    }
   }
 
   if (args.include || args.select) {

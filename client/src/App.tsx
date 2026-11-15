@@ -31,6 +31,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { LoginForm } from './components/school/login-form'
+import { RoleShell } from './components/school/role-shell'
 import { RoleWorkspace } from './components/school/role-workspace'
 import {
   adminNavigation,
@@ -472,7 +473,11 @@ function AdminSectionRoute() {
   if (!adminNavigation.some((item) => item.href === `/admin/${section}`)) {
     return <NotFoundPage />
   }
-  return <RoleWorkspace role="admin" section={section} />
+  return (
+    <RoleShell role="admin">
+      <RoleWorkspace role="admin" section={section} />
+    </RoleShell>
+  )
 }
 
 function TeacherSectionRoute() {
@@ -480,7 +485,11 @@ function TeacherSectionRoute() {
   if (!teacherNavigation.some((item) => item.href === `/teacher/${section}`)) {
     return <NotFoundPage />
   }
-  return <RoleWorkspace role="teacher" section={section} />
+  return (
+    <RoleShell role="teacher">
+      <RoleWorkspace role="teacher" section={section} />
+    </RoleShell>
+  )
 }
 
 function GuardianSectionRoute() {
@@ -488,7 +497,11 @@ function GuardianSectionRoute() {
   if (!guardianNavigation.some((item) => item.href === `/guardian/${section}`)) {
     return <NotFoundPage />
   }
-  return <RoleWorkspace role="guardian" section={section} />
+  return (
+    <RoleShell role="guardian">
+      <RoleWorkspace role="guardian" section={section} />
+    </RoleShell>
+  )
 }
 
 export function App() {
@@ -503,7 +516,9 @@ export function App() {
           path="/admin/dashboard"
           element={
             <RoleRouteGuard requiredRole="admin">
-              <RoleWorkspace role="admin" section="dashboard" />
+              <RoleShell role="admin">
+                <RoleWorkspace role="admin" section="dashboard" />
+              </RoleShell>
             </RoleRouteGuard>
           }
         />
@@ -520,7 +535,9 @@ export function App() {
           path="/teacher/today"
           element={
             <RoleRouteGuard requiredRole="teacher">
-              <RoleWorkspace role="teacher" section="today" />
+              <RoleShell role="teacher">
+                <RoleWorkspace role="teacher" section="today" />
+              </RoleShell>
             </RoleRouteGuard>
           }
         />
@@ -537,7 +554,9 @@ export function App() {
           path="/guardian/home"
           element={
             <RoleRouteGuard requiredRole="guardian">
-              <RoleWorkspace role="guardian" section="home" />
+              <RoleShell role="guardian">
+                <RoleWorkspace role="guardian" section="home" />
+              </RoleShell>
             </RoleRouteGuard>
           }
         />
