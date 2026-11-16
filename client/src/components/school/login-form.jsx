@@ -194,8 +194,8 @@ export function LoginForm({ initialRole = 'admin' }) {
                 <span>MR</span>
               </div>
               <div>
-                <strong>One school. Three connected portals.</strong>
-                <span>Real-time MongoDB Atlas database · Role-based security</span>
+                <strong>One school. Everyone included.</strong>
+                <span>Admin · Teacher · Guardian Portals</span>
               </div>
             </div>
           </div>
@@ -203,7 +203,7 @@ export function LoginForm({ initialRole = 'admin' }) {
 
         <div className="login-brand-bottom">
           <span>
-            <Check size={16} /> Live database connected · All 3 roles active
+            <Check size={16} /> Designed for your school community
           </span>
           <span>Northstar Academy · Springfield, IL</span>
         </div>

@@ -10,10 +10,10 @@ import {
 } from 'react-router-dom'
 import Link from './shims/next-link'
 import {
-  Activity,
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  Award,
   BarChart3,
   BookOpen,
   CalendarCheck2,
@@ -21,20 +21,15 @@ import {
   CheckCircle2,
   ChevronRight,
   ClipboardCheck,
-  Database,
-  FileSpreadsheet,
   GraduationCap,
   HeartHandshake,
-  Layers,
   LibraryBig,
   Lock,
   Menu,
   SearchX,
-  Server,
   ShieldCheck,
   ShieldX,
   Sparkles,
-  TrendingUp,
   UsersRound,
   Wallet,
   Zap,
@@ -99,50 +94,50 @@ function RoleRouteGuard({ requiredRole, children }) {
 const roles = [
   {
     name: 'Admin',
-    badge: 'INSTITUTIONAL COMMAND',
+    badge: 'SCHOOL LEADERSHIP',
     email: 'admin@school.demo',
     icon: ShieldCheck,
     tint: 'violet',
     accent: '#4f46e5',
     description:
-      'Complete institutional oversight across students, faculty, academic structure, fee ledgers, exam publishing, and immutable audit logs.',
+      'A complete command center for principals and registrars to manage admissions, faculty, timetables, exam publishing, and school finances.',
     bullets: [
-      'Full CRUD for Students, Guardians, Teachers, Classes & Subjects',
-      'Publish or unlock examination results with audit trail',
-      'Double-entry fee invoicing, partial payments & reversals',
-      'CSV exportable school-wide reports & live KPI analytics',
+      'Manage students, families, faculty, classes & subject curricula',
+      'Review, approve, and publish official term examination results',
+      'Automate tuition billing, partial payments & digital receipts',
+      'One-click exportable reports for board meetings & compliance',
     ],
   },
   {
     name: 'Teacher',
-    badge: 'CLASSROOM STUDIO',
+    badge: 'CLASSROOM EXCELLENCE',
     email: 'teacher@school.demo',
     icon: BookOpen,
     tint: 'mint',
     accent: '#0d9488',
     description:
-      'A focused, zero-clutter teaching workspace strictly scoped to your assigned classes, sections, and academic subjects.',
+      'A calm, focused workspace designed around your daily teaching schedule—so you spend less time on paperwork and more time with students.',
     bullets: [
-      'Same-day attendance roster with Present, Late & Absent toggles',
-      'Subject marks entry with automatic max-marks validation',
-      'Submit draft gradebooks to administration for review',
-      'Track student academic performance across assigned sections',
+      'Take morning attendance in under 30 seconds with smart rosters',
+      'Enter exam marks with automatic grade & pass/fail calculation',
+      'Submit completed gradebooks directly to school administration',
+      'Spot at-risk learners early with live attendance & grade trends',
     ],
   },
   {
     name: 'Guardian',
-    badge: 'FAMILY PORTAL',
+    badge: 'FAMILY CONNECTION',
     email: 'guardian@school.demo',
     icon: HeartHandshake,
     tint: 'amber',
     accent: '#0284c7',
     description:
-      'A transparent, real-time window into your linked children’s daily attendance, published report cards, and tuition fee statements.',
+      'A welcoming, transparent window into your child’s school life—keeping parents informed on attendance, grades, and tuition from anywhere.',
     bullets: [
-      'Instant multi-child switcher for families with multiple learners',
-      'Term attendance percentages & daily attendance history',
-      'Official published examination report cards & subject grades',
-      'Online tuition invoice ledger, receipts & balance tracking',
+      'Switch effortlessly between multiple children in one family account',
+      'Real-time daily attendance alerts and term attendance summaries',
+      'View official published report cards and subject-wise performance',
+      'Check tuition balances, due dates, and download payment receipts',
     ],
   },
 ]
@@ -150,122 +145,122 @@ const roles = [
 const features = [
   {
     icon: UsersRound,
-    badge: 'RELATIONAL DIRECTORY',
-    title: 'Unified Student & Family Graph',
-    text: 'Many-to-many Guardian–Student links, class-section enrollment, and department-mapped faculty profiles backed by 20 Mongoose models.',
+    badge: 'STUDENT SUCCESS',
+    title: 'Admissions & Family Directory',
+    text: 'Keep student profiles, emergency contacts, sibling relationships, and class placements organized in one searchable directory.',
   },
   {
     icon: CalendarCheck2,
-    badge: 'CONCURRENCY SAFE',
-    title: 'Real-Time Attendance Engine',
-    text: 'Enforces compound unique constraints on (student, date, session) to prevent duplicate entries while computing live 30-day attendance rates.',
+    badge: 'EVERY DAY COUNTS',
+    title: '30-Second Daily Attendance',
+    text: 'Teachers mark Present, Late, or Absent in one tap while principals and parents get instant visibility into term attendance trends.',
   },
   {
     icon: BarChart3,
-    badge: 'WORKFLOW STATE MACHINE',
-    title: 'Examinations & Auto-Grading',
-    text: 'End-to-end DRAFT → SUBMITTED → PUBLISHED result pipeline with configurable grade bands (A+ to F) and automatic pass/fail evaluation.',
+    badge: 'ACADEMIC EXCELLENCE',
+    title: 'Examinations & Report Cards',
+    text: 'Streamline assessment cycles from teacher marks entry to principal approval and digital report cards with customizable grading scales.',
   },
   {
     icon: Wallet,
-    badge: 'INTEGER MINOR-UNIT LEDGER',
-    title: 'Precision Fee & Payment Accounting',
-    text: 'Zero-float integer cent arithmetic, atomic payment transactions, partial payments, receipt numbers, and reversal audit entries.',
+    badge: 'EFFORTLESS FINANCE',
+    title: 'Transparent Tuition & Billing',
+    text: 'Generate term fee invoices, accept partial or full payments, issue instant receipts, and give families clear balance statements.',
   },
   {
     icon: LibraryBig,
-    badge: 'EXECUTIVE ANALYTICS',
-    title: '6 Live Exportable School Reports',
-    text: 'Generate real-time Student, Attendance, Academic Performance, Examination, Fee Collection, and Outstanding Balance reports with 1-click CSV export.',
+    badge: 'SMART DECISIONS',
+    title: 'One-Click School Reports',
+    text: 'Generate enrollment, attendance, honor-roll, and fee collection reports in seconds—ready to view or download as CSV spreadsheets.',
   },
   {
     icon: ClipboardCheck,
-    badge: 'ZERO-TRUST SECURITY',
-    title: 'Server-Enforced RBAC & Audit Logs',
-    text: 'Signed HS256 JWT sessions, bcryptjs password hashing, CSRF verification, and an immutable AuditLog recording every state change.',
+    badge: 'TRUST & ACCOUNTABILITY',
+    title: 'Complete Activity History',
+    text: 'Maintain institutional trust with role-based permissions and a clear activity log of grade approvals, enrollments, and fee updates.',
   },
 ]
 
 const previewTabs = {
   admin: {
     url: 'northstar.school/admin/dashboard',
-    roleLabel: 'Administrator Command Center',
-    badge: 'LIVE MONGODB ATLAS',
+    roleLabel: 'Principal & Admin Command Center',
+    badge: 'LIVE CAMPUS PULSE',
     accent: '#4f46e5',
     greeting: 'Good morning, Dr. Eleanor Vance',
     subtitle: 'Here is what is happening across Northstar Academy today.',
     ctaLabel: '+ Enroll Student',
     ctaHref: '/login?role=admin',
-    sidebar: ['Overview', 'Students', 'Teachers', 'Classes & Sections', 'Examinations', 'Fees & Invoices', 'Audit Logs'],
+    sidebar: ['Overview', 'Students', 'Teachers', 'Classes & Sections', 'Examinations', 'Tuition & Fees', 'Reports'],
     stats: [
-      { label: 'Total Students', value: '60', delta: '+12 this term', color: '#4f46e5' },
-      { label: 'Attendance Rate', value: '95.2%', delta: '30-day avg', color: '#0d9488' },
-      { label: 'Fees Collected', value: '$17,250', delta: '78% of target', color: '#d97706' },
+      { label: 'Enrolled Students', value: '2,840', delta: '+12% this year', color: '#4f46e5' },
+      { label: 'Attendance Today', value: '95.2%', delta: 'Above 94% target', color: '#0d9488' },
+      { label: 'Tuition Collected', value: '92.4%', delta: 'Term 2 on track', color: '#d97706' },
     ],
-    chartTitle: 'School-Wide Attendance & Enrollment Velocity',
-    leftTitle: 'Recent Audit Trail',
+    chartTitle: 'Campus Attendance & Enrollment Overview',
+    leftTitle: 'Today’s Campus Highlights',
     leftItems: [
-      { text: 'Exam PUBLISHED · Midterm 2026', meta: '2m ago' },
-      { text: 'Payment RCP-1042 · $650.00 recorded', meta: '14m ago' },
+      { text: 'Term 2 Midterm Results Published', meta: 'Grade 10' },
+      { text: 'Morning Attendance Completed', meta: 'All 6 Sections' },
     ],
-    rightTitle: 'Department Overview',
+    rightTitle: 'Upcoming School Schedule',
     rightItems: [
-      { text: 'Grade 10 · Section A & B (96% present)', meta: 'Room 204' },
-      { text: 'Grade 11 · STEM Track (All marks in)', meta: 'Lab 3' },
+      { text: 'Academic Department Briefing', meta: '09:00 AM · Room 204' },
+      { text: 'Parent-Teacher Showcase', meta: 'Friday · Main Hall' },
     ],
   },
   teacher: {
     url: 'northstar.school/teacher/today',
     roleLabel: 'Teacher Classroom Studio',
-    badge: 'SCOPED TO ASSIGNED CLASSES',
+    badge: 'GRADE 10 · SCIENCE DEPT',
     accent: '#0d9488',
     greeting: 'Good morning, Ms. Elena Rostova',
     subtitle: 'Grade 10 · Section A & B · Biology & Chemistry',
     ctaLabel: '✓ Mark Attendance',
     ctaHref: '/login?role=teacher',
-    sidebar: ['Today', 'My Classes', 'Attendance', 'Marks Entry', 'Examinations', 'Student Performance', 'Profile'],
+    sidebar: ['Today', 'My Classes', 'Attendance', 'Marks Entry', 'Examinations', 'Student Progress', 'Profile'],
     stats: [
-      { label: 'My Students', value: '20', delta: '2 assigned sections', color: '#0d9488' },
-      { label: 'Classes Today', value: '4', delta: 'Next: 09:30 AM', color: '#2563eb' },
-      { label: 'Marks Pending', value: '1 Paper', delta: 'Term 2 Assessment', color: '#7c3aed' },
+      { label: 'My Students', value: '60', delta: 'Across 2 sections', color: '#0d9488' },
+      { label: 'Classes Today', value: '4', delta: 'Next at 09:30 AM', color: '#2563eb' },
+      { label: 'Gradebooks Due', value: '1 Left', delta: 'Term 2 Assessment', color: '#7c3aed' },
     ],
-    chartTitle: 'Section A & B Weekly Attendance Trend',
-    leftTitle: 'Today’s Teaching Schedule',
+    chartTitle: 'Classroom Attendance & Assessment Trend',
+    leftTitle: 'Today’s Teaching Timetable',
     leftItems: [
-      { text: 'Biology · Grade 10 Section A', meta: '08:30 AM · Lab 2' },
+      { text: 'Biology · Grade 10 Section A', meta: '08:30 AM · Science Lab 2' },
       { text: 'Chemistry · Grade 10 Section B', meta: '10:15 AM · Room 108' },
     ],
-    rightTitle: 'Gradebook Action Items',
+    rightTitle: 'Recent Classroom Updates',
     rightItems: [
-      { text: 'Midterm Biology Marks · Published', meta: '20 / 20 graded' },
-      { text: 'Today’s Roster · 19 Present, 1 Late', meta: 'Synced' },
+      { text: 'Midterm Biology Grades Submitted', meta: '100% Complete' },
+      { text: 'Morning Roster · 97% Present', meta: 'Submitted' },
     ],
   },
   guardian: {
     url: 'northstar.school/guardian/home',
-    roleLabel: 'Guardian Family Portal',
-    badge: 'MULTI-CHILD LINKED',
+    roleLabel: 'Parent & Guardian Family Portal',
+    badge: '2 CHILDREN ENROLLED',
     accent: '#0284c7',
     greeting: 'Good morning, Marcus Reynolds',
-    subtitle: 'Viewing Olivia Reynolds (Grade 10 · Section A) & Liam Reynolds',
-    ctaLabel: 'View Report Card',
+    subtitle: 'Viewing Olivia Reynolds (Grade 10) & Liam Reynolds (Grade 9)',
+    ctaLabel: 'Download Report Card',
     ctaHref: '/login?role=guardian',
-    sidebar: ['Family Home', 'Attendance History', 'Published Results', 'Tuition & Fees', 'Family Profile'],
+    sidebar: ['Family Home', 'Attendance', 'Report Cards', 'Tuition & Fees', 'Family Profile'],
     stats: [
-      { label: 'Olivia’s Attendance', value: '96.7%', delta: '29/30 days present', color: '#0284c7' },
-      { label: 'Latest Exam Grade', value: 'A (91%)', delta: 'Midterm Published', color: '#0d9488' },
-      { label: 'Tuition Balance', value: '$600.00', delta: '1 partial invoice', color: '#d97706' },
+      { label: 'Olivia’s Attendance', value: '96.7%', delta: 'Present today', color: '#0284c7' },
+      { label: 'Latest Term Grade', value: 'A (91%)', delta: 'Honor Roll', color: '#0d9488' },
+      { label: 'Next Tuition Due', value: 'Oct 28', delta: 'Statement ready', color: '#d97706' },
     ],
-    chartTitle: 'Olivia’s Academic & Attendance Progress',
-    leftTitle: 'Published Report Card Highlights',
+    chartTitle: 'Olivia’s Term Progress & Attendance',
+    leftTitle: 'Latest Published Report Card',
     leftItems: [
-      { text: 'Biology · 92 / 100 (Grade A+)', meta: 'Passed' },
-      { text: 'Mathematics · 89 / 100 (Grade A)', meta: 'Passed' },
+      { text: 'Biology · 92 / 100 (Grade A+)', meta: 'Excellent' },
+      { text: 'Mathematics · 89 / 100 (Grade A)', meta: 'Commended' },
     ],
-    rightTitle: 'Family Tuition & Events',
+    rightTitle: 'Upcoming Family Dates',
     rightItems: [
-      { text: 'Receipt RCP-2026-001 · $650 Paid', meta: 'Verified' },
-      { text: 'Parent-Teacher Conference', meta: 'Friday, 10:00 AM' },
+      { text: 'Autumn Science Fair Showcase', meta: 'Thursday · 02:00 PM' },
+      { text: 'Parent-Teacher Conference', meta: 'Friday · 10:00 AM' },
     ],
   },
 }
@@ -277,19 +272,20 @@ function HomePage() {
 
   return (
     <main className="home-page">
-      {/* Top Announcement / System Status Strip */}
+      {/* Top Announcement Strip */}
       <div className="home-top-banner">
         <div className="home-top-banner-inner">
           <span className="home-status-dot" />
           <span>
-            <strong>Northstar Cloud OS 2.0</strong> · Powered by React 19, Express 5 & MongoDB Atlas
+            <strong>Northstar Academic Suite</strong> · Admissions, Attendance, Grading & Tuition in
+            One Connected Platform
           </span>
           <div className="home-top-quick-links">
-            <Link href="/login?role=admin">Admin Demo</Link>
+            <Link href="/login?role=admin">Admin Portal</Link>
             <span>·</span>
-            <Link href="/login?role=teacher">Teacher Demo</Link>
+            <Link href="/login?role=teacher">Teacher Portal</Link>
             <span>·</span>
-            <Link href="/login?role=guardian">Guardian Demo</Link>
+            <Link href="/login?role=guardian">Parent Portal</Link>
           </div>
         </div>
       </div>
@@ -314,19 +310,19 @@ function HomePage() {
           </button>
           <nav className={menuOpen ? 'home-links home-links-open' : 'home-links'}>
             <a href="#roles" onClick={() => setMenuOpen(false)}>
-              Role Portals
+              Portals
             </a>
             <a href="#features" onClick={() => setMenuOpen(false)}>
-              Platform Capabilities
+              Features
             </a>
-            <a href="#architecture" onClick={() => setMenuOpen(false)}>
-              MERN Architecture
+            <a href="#impact" onClick={() => setMenuOpen(false)}>
+              Why Northstar
             </a>
             <a href="#contact" onClick={() => setMenuOpen(false)}>
-              Get Started
+              Contact
             </a>
             <Link className="home-login" href="/login">
-              Launch Workspace <ArrowUpRight size={15} />
+              Sign In to Portal <ArrowUpRight size={15} />
             </Link>
           </nav>
         </div>
@@ -336,7 +332,7 @@ function HomePage() {
       <section className="hero-section">
         <div className="hero-copy">
           <div className="hero-kicker">
-            <Sparkles size={14} /> NEXT-GEN ACADEMIC OPERATING SYSTEM
+            <Sparkles size={14} /> DESIGNED FOR MODERN K–12 SCHOOLS & ACADEMIES
           </div>
           <h1>
             More connected schools.
@@ -344,9 +340,9 @@ function HomePage() {
             <span>Brighter futures.</span>
           </h1>
           <p>
-            One unified, high-velocity platform connecting administrators, educators, and families —
-            engineered with real-time MongoDB Atlas persistence, strict role-based security, and
-            precision financial ledgers.
+            Bring your principals, teachers, and parents together in one calm, intuitive
+            platform—from morning attendance and classroom grading to published report cards and
+            tuition management.
           </p>
 
           <div className="hero-actions">
@@ -354,14 +350,14 @@ function HomePage() {
               Login to your workspace <ArrowRight size={16} />
             </Link>
             <a href="#roles" className="home-secondary">
-              Explore 3 Role Portals <ChevronRight size={16} />
+              Explore Role Portals <ChevronRight size={16} />
             </a>
           </div>
 
           {/* Instant 1-Click Role Launchers */}
           <div className="hero-quick-portals">
             <span className="hero-quick-label">
-              <Zap size={13} /> Instant Demo Access:
+              <Zap size={13} /> Try an Interactive Live Demo:
             </span>
             <div className="hero-quick-pills">
               <Link href="/login?role=admin" className="hero-role-pill pill-admin">
@@ -371,7 +367,7 @@ function HomePage() {
                 <BookOpen size={14} /> Teacher
               </Link>
               <Link href="/login?role=guardian" className="hero-role-pill pill-guardian">
-                <HeartHandshake size={14} /> Guardian
+                <HeartHandshake size={14} /> Parent / Guardian
               </Link>
             </div>
           </div>
@@ -384,9 +380,9 @@ function HomePage() {
             </div>
             <div>
               <div className="proof-stars">
-                <Sparkles size={12} /> ENTERPRISE GRADE · MERN STACK
+                <Sparkles size={12} /> LOVED BY EDUCATORS & FAMILIES
               </div>
-              <p>20 Mongoose Models · Zero-Trust RBAC · Real-Time Cloud Sync</p>
+              <p>Saving teachers 8+ hours every week while keeping every parent in sync</p>
             </div>
           </div>
         </div>
@@ -402,9 +398,9 @@ function HomePage() {
             </div>
             <div className="preview-role-tabs" role="tablist" aria-label="Interactive dashboard preview">
               {[
-                { id: 'admin', label: 'Admin Portal', icon: ShieldCheck },
-                { id: 'teacher', label: 'Teacher Studio', icon: BookOpen },
-                { id: 'guardian', label: 'Guardian Portal', icon: HeartHandshake },
+                { id: 'admin', label: 'Principal & Admin', icon: ShieldCheck },
+                { id: 'teacher', label: 'Teacher Classroom', icon: BookOpen },
+                { id: 'guardian', label: 'Parent & Family', icon: HeartHandshake },
               ].map(({ id, label, icon: TabIcon }) => (
                 <button
                   key={id}
@@ -471,7 +467,7 @@ function HomePage() {
 
               <div className="preview-chart">
                 <div className="preview-chart-title">
-                  {preview.chartTitle} <span>Live Telemetry</span>
+                  {preview.chartTitle} <span>Live</span>
                 </div>
                 <div className="preview-chart-lines">
                   <i />
@@ -534,35 +530,35 @@ function HomePage() {
               <span className="float-check">
                 <Check size={14} />
               </span>
-              <strong>Real-Time Atlas Sync</strong>
+              <strong>All caught up</strong>
             </div>
             <span>Click any tab above to preview each role</span>
           </div>
         </div>
       </section>
 
-      {/* Live Institutional Metrics Strip */}
-      <section className="home-metrics-strip" aria-label="Platform key metrics">
+      {/* School Impact Metrics Strip */}
+      <section className="home-metrics-strip" aria-label="School impact metrics">
         <div className="home-metrics-grid">
           <div className="home-metric-item">
-            <strong>20</strong>
-            <span>Mongoose Cloud Schemas</span>
-            <small>Indexed & relationally linked</small>
+            <strong>98.4%</strong>
+            <span>Parent Portal Engagement</span>
+            <small>Families stay informed every day</small>
           </div>
           <div className="home-metric-item">
-            <strong>3 Portals</strong>
-            <span>Admin · Teacher · Guardian</span>
-            <small>Strict server-side RBAC scope</small>
+            <strong>8+ hrs</strong>
+            <span>Saved Per Teacher Weekly</span>
+            <small>Faster attendance & grading</small>
           </div>
           <div className="home-metric-item">
             <strong>95.2%</strong>
-            <span>Live Attendance Tracking</span>
-            <small>Unique daily session constraints</small>
+            <span>Daily Attendance Rate</span>
+            <small>Instant morning follow-ups</small>
           </div>
           <div className="home-metric-item">
-            <strong>100%</strong>
-            <span>Integer Cent Fee Ledger</span>
-            <small>Zero floating-point drift</small>
+            <strong>2.4×</strong>
+            <span>Faster Tuition Collection</span>
+            <small>Clear digital invoices & receipts</small>
           </div>
         </div>
       </section>
@@ -570,11 +566,11 @@ function HomePage() {
       {/* 3 Role Portals Section */}
       <section className="roles-section" id="roles">
         <div className="section-intro">
-          <span>THREE DEDICATED PORTALS · ONE UNIFIED DATABASE</span>
-          <h2>Purpose-built workspaces for every role.</h2>
+          <span>MADE FOR EVERY ROLE</span>
+          <h2>One school, three tailored experiences.</h2>
           <p>
-            Every endpoint and UI view is tailored and server-scoped to the signed-in user’s role —
-            delivering institutional power without visual clutter.
+            Administrators, teachers, and parents each get a dedicated workspace designed around
+            their daily needs—without the extra noise.
           </p>
         </div>
         <div className="role-cards">
@@ -592,7 +588,7 @@ function HomePage() {
                   {badge}
                 </span>
               </div>
-              <h3>{name} Portal</h3>
+              <h3>{name}</h3>
               <p>{description}</p>
               <ul className="role-bullet-list">
                 {bullets.map((b) => (
@@ -604,7 +600,7 @@ function HomePage() {
               </ul>
               <div className="role-card-footer">
                 <div className="role-demo-cred">
-                  <small>DEMO ACCOUNT</small>
+                  <small>DEMO LOGIN</small>
                   <code>{email}</code>
                 </div>
                 <Link
@@ -623,11 +619,11 @@ function HomePage() {
       {/* Platform Capabilities Bento Grid */}
       <section className="features-section" id="features">
         <div className="section-intro">
-          <span>ENTERPRISE ACADEMIC INFRASTRUCTURE</span>
-          <h2>Engineered for institutional precision.</h2>
+          <span>EVERYTHING YOUR CAMPUS NEEDS</span>
+          <h2>Everything in its right place.</h2>
           <p>
-            Every module is backed by strict Zod validation, atomic database invariants, and
-            real-time MongoDB Atlas queries.
+            Replace disconnected spreadsheets and paper forms with connected workflows that leave
+            more room for what matters most: learning.
           </p>
         </div>
         <div className="feature-grid">
@@ -646,48 +642,48 @@ function HomePage() {
         </div>
       </section>
 
-      {/* MERN Stack Architecture Showcase */}
-      <section className="arch-section" id="architecture">
+      {/* Why Schools Choose Northstar */}
+      <section className="arch-section" id="impact">
         <div className="section-intro">
-          <span>MODERN CLOUD ARCHITECTURE</span>
-          <h2>Built on the industry-standard MERN stack.</h2>
+          <span>WHY SCHOOLS CHOOSE NORTHSTAR</span>
+          <h2>Built for calmer, high-performing campuses.</h2>
           <p>
-            Decoupled client and server architecture designed for seamless cloud deployment on
-            Vercel, Render, and MongoDB Atlas.
+            Whether you run a single academy or a growing K–12 institution, Northstar keeps every
+            department and family aligned.
           </p>
         </div>
         <div className="arch-grid">
           <div className="arch-card">
             <div className="arch-icon arch-icon-blue">
-              <Layers size={22} />
+              <ShieldCheck size={22} />
             </div>
-            <span className="arch-tag">FRONTEND · VERCEL</span>
-            <h3>React 19 + Vite 6 SPA</h3>
+            <span className="arch-tag">FOR PRINCIPALS & REGISTRARS</span>
+            <h3>Complete Campus Visibility</h3>
             <p>
-              Lightning-fast client-side routing with React Router v7, Tailwind CSS v4, Shadcn UI
-              components, Recharts telemetry, and instant command palette (⌘K).
+              See real-time enrollment numbers, daily attendance percentages, pending exam
+              publications, and tuition collection rates from one executive dashboard.
             </p>
           </div>
           <div className="arch-card">
             <div className="arch-icon arch-icon-mint">
-              <Server size={22} />
+              <Award size={22} />
             </div>
-            <span className="arch-tag">BACKEND API · RENDER</span>
-            <h3>Node.js + Express 5 REST API</h3>
+            <span className="arch-tag">FOR TEACHERS & FACULTY</span>
+            <h3>More Time for Teaching</h3>
             <p>
-              21 modular REST endpoints protected by Zod schema validation, HS256 JWT sessions
-              (jose), bcryptjs hashing, and CSRF verification.
+              Eliminate repetitive data entry with instant class rosters, keyboard-friendly marks
+              entry, and automatic grade calculations across every subject.
             </p>
           </div>
           <div className="arch-card">
             <div className="arch-icon arch-icon-violet">
-              <Database size={22} />
+              <HeartHandshake size={22} />
             </div>
-            <span className="arch-tag">CLOUD DATABASE · ATLAS</span>
-            <h3>MongoDB Atlas + Mongoose 8</h3>
+            <span className="arch-tag">FOR PARENTS & FAMILIES</span>
+            <h3>Stronger Home–School Trust</h3>
             <p>
-              20 relational document schemas with compound unique indexes, cascading cleanup, and
-              serialized transaction queues for ledger accuracy.
+              Give parents peace of mind with transparent attendance history, official published
+              report cards, and clear tuition statements on any device.
             </p>
           </div>
         </div>
@@ -696,33 +692,33 @@ function HomePage() {
       {/* Workflow Steps */}
       <section className="steps-section">
         <div className="section-intro">
-          <span>ZERO CONFIGURATION ONBOARDING</span>
-          <h2>From sign-in to full school sync in seconds.</h2>
-          <p>Pre-seeded with realistic academic data so you can evaluate every workflow immediately.</p>
+          <span>A SMALLER LEARNING CURVE</span>
+          <h2>From sign-in to in-sync in three steps.</h2>
+          <p>Thoughtfully designed so staff and families feel right at home on day one.</p>
         </div>
         <div className="steps-grid">
           <article>
             <span>01</span>
-            <h3>Select your portal role</h3>
+            <h3>Choose your portal</h3>
             <p>
-              Choose Administrator, Teacher, or Guardian on the sign-in screen — demo credentials
-              auto-fill in one click.
+              Sign in as an Administrator, Teacher, or Guardian to open the workspace tailored to
+              your role.
             </p>
           </article>
           <article>
             <span>02</span>
-            <h3>Explore live MongoDB data</h3>
+            <h3>See your classes & people</h3>
             <p>
-              Interact with 60 enrolled students, 6 class sections, 30 days of attendance, published
-              exams, and live fee invoices.
+              Instantly access the students, class sections, timetables, and family members
+              connected to you.
             </p>
           </article>
           <article>
             <span>03</span>
-            <h3>Execute real workflows</h3>
+            <h3>Keep the school day moving</h3>
             <p>
-              Mark daily attendance, enter and publish exam marks, record partial fee payments, and
-              inspect the immutable audit log.
+              Record attendance, publish grades, download report cards, and manage tuition with
+              complete clarity.
             </p>
           </article>
         </div>
@@ -731,21 +727,20 @@ function HomePage() {
       {/* High-Impact CTA Banner */}
       <section className="home-cta" id="contact">
         <div>
-          <span>READY TO EXPLORE NORTHSTAR ACADEMY?</span>
-          <h2>Experience all three portals live right now.</h2>
+          <span>YOUR SCHOOL, A LITTLE MORE IN SYNC</span>
+          <h2>Let’s make every school day count.</h2>
           <p className="home-cta-sub">
-            Sign in with 1-click demo credentials to test Admin, Teacher, and Guardian workflows end
-            to end.
+            Explore the live interactive demo as an Administrator, Teacher, or Parent right now.
           </p>
         </div>
         <div className="home-cta-buttons">
           <Link href="/login" className="home-cta-primary">
-            Go to Workspace Sign-In <ArrowRight size={16} />
+            Go to your workspace <ArrowRight size={16} />
           </Link>
           <div className="home-cta-role-row">
-            <Link href="/login?role=admin">Admin</Link>
-            <Link href="/login?role=teacher">Teacher</Link>
-            <Link href="/login?role=guardian">Guardian</Link>
+            <Link href="/login?role=admin">Admin Demo</Link>
+            <Link href="/login?role=teacher">Teacher Demo</Link>
+            <Link href="/login?role=guardian">Parent Demo</Link>
           </div>
         </div>
       </section>
@@ -760,12 +755,12 @@ function HomePage() {
             northstar<span>.</span>
           </span>
         </Link>
-        <span>Enterprise School Management System · React · Express · Node · MongoDB Atlas</span>
+        <span>Thoughtful tools for brighter school days.</span>
         <div>
-          <a href="#roles">Role Portals</a>
-          <a href="#features">Capabilities</a>
-          <a href="#architecture">Architecture</a>
-          <Link href="/login">Sign In</Link>
+          <a href="#roles">For your role</a>
+          <a href="#features">Features</a>
+          <a href="#impact">Why Northstar</a>
+          <a href="mailto:hello@northstar.school">Contact</a>
         </div>
         <small>© 2026 Northstar Academy</small>
       </footer>
