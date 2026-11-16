@@ -316,14 +316,30 @@ export function LoginForm({ initialRole = 'admin' }) {
             </button>
           </form>
 
-          <div className="demo-box">
-            <div className="demo-values">
-              <span className="demo-badge">DEMO</span>
-              <code>{demoCredentials[role].email}</code>
-              <code>{demoCredentials[role].password}</code>
-              <button type="button" className="demo-fill" onClick={fillDemo}>
-                Fill automatically
+          <div className="demo-box" role="region" aria-label="Demo credentials">
+            <div className="demo-box-header">
+              <div className="demo-box-badge-group">
+                <span className="demo-badge">DEMO</span>
+                <span className="demo-hint-text">Instant test access</span>
+              </div>
+              <button
+                type="button"
+                className="demo-fill"
+                onClick={fillDemo}
+                title="Fill demo credentials into form"
+              >
+                <Sparkles size={12} /> Auto-fill
               </button>
+            </div>
+            <div className="demo-values">
+              <div className="demo-cred-pill" title={demoCredentials[role].email}>
+                <span className="demo-cred-key">Email</span>
+                <code>{demoCredentials[role].email}</code>
+              </div>
+              <div className="demo-cred-pill">
+                <span className="demo-cred-key">Pass</span>
+                <code>{demoCredentials[role].password}</code>
+              </div>
             </div>
           </div>
         </div>
