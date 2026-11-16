@@ -50,6 +50,12 @@ const labels = {
   guardian: 'Guardian',
 }
 
+const shortLabels = {
+  admin: 'Admin',
+  teacher: 'Teacher',
+  guardian: 'Guardian',
+}
+
 export function LoginForm({ initialRole = 'admin' }) {
   const router = useRouter()
   const [role, setRole] = useState(initialRole)
@@ -179,13 +185,23 @@ export function LoginForm({ initialRole = 'admin' }) {
         <div className="login-card">
           <div className="login-panel-topbar">
             <Link href="/" className="login-back">
-              <ArrowLeft size={15} /> Back to home
+              <ArrowLeft size={14} /> Back
             </Link>
+            <div className="login-mobile-brand-tag">
+              <span className="home-brand-icon-sm">
+                <GraduationCap size={15} />
+              </span>
+              <span className="login-brand-name">
+                northstar<span>.</span>
+              </span>
+            </div>
             <span
               className="login-active-pill"
               style={{ background: activeRoleMeta.bgWeak, color: activeRoleMeta.accent }}
             >
-              {labels[role]} Portal
+              <span className="login-pill-role-full">{labels[role]}</span>
+              <span className="login-pill-role-short">{shortLabels[role]}</span>
+              <span className="login-pill-portal"> Portal</span>
             </span>
           </div>
 

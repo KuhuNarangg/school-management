@@ -2965,136 +2965,329 @@ body,
   line-height: 1.55 !important;
 }
 
+.login-page {
+  min-height: 100vh !important;
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: minmax(320px, 0.85fr) minmax(480px, 1.15fr) !important;
+  background: #f8fafc !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+.login-brand-panel {
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+}
+
 .login-form-panel {
-  height: 100vh !important;
-  min-height: 0 !important;
-  padding: 20px 32px !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  padding: 24px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: hidden !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 .login-card {
-  width: min(100%, 470px) !important;
-  margin: 0 !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  margin: auto !important;
   padding: 24px 26px !important;
   border-radius: 16px !important;
   background: #ffffff !important;
   border: 1px solid #cbd5e1 !important;
   box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 .login-panel-topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
   width: 100% !important;
   margin-bottom: 14px !important;
+  box-sizing: border-box !important;
 }
 
 .login-back {
-  padding: 5px 10px !important;
-  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  background: #f1f5f9 !important;
+  border-radius: 6px !important;
+  border: 1px solid #e2e8f0 !important;
+  text-decoration: none !important;
+  flex-shrink: 0 !important;
+  transition: all 0.15s ease !important;
+}
+
+.login-back:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.login-mobile-brand-tag {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  font-weight: 800;
+  font-size: 15px;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.login-mobile-brand-tag span span {
+  color: var(--login-accent, #0f766e);
+}
+
+.home-brand-icon-sm {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: white;
+  background: #1e3a34;
 }
 
 .login-active-pill {
   font-size: 11.5px !important;
+  font-weight: 700 !important;
   padding: 4px 10px !important;
+  border-radius: 999px !important;
+  flex-shrink: 0 !important;
+}
+
+.login-pill-role-short {
+  display: none !important;
 }
 
 .login-heading h2 {
   font-size: 25px !important;
   font-weight: 850 !important;
   margin: 0 0 3px !important;
+  color: #0f172a !important;
+  letter-spacing: -0.02em !important;
 }
 
 .login-heading > p {
   font-size: 13.5px !important;
+  color: #64748b !important;
   margin: 0 !important;
 }
 
 .login-role-grid {
-  grid-template-columns: repeat(3, 1fr) !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  margin: 14px 0 16px !important;
+  margin: 12px 0 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .login-role {
-  min-height: 64px !important;
-  padding: 10px 10px !important;
+  min-width: 0 !important;
+  min-height: 56px !important;
+  padding: 8px 8px !important;
+  display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 9px !important;
+  gap: 8px !important;
   border-radius: 10px !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.login-role:hover {
+  border-color: #cbd5e1;
 }
 
 .login-role-icon {
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 8px !important;
-  flex-shrink: 0;
+  width: 28px !important;
+  height: 28px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 7px !important;
+  flex-shrink: 0 !important;
 }
 
 .login-role-copy {
+  display: flex !important;
+  flex-direction: column !important;
   gap: 1px !important;
-  min-width: 0;
+  min-width: 0 !important;
+  flex: 1 1 0% !important;
+  overflow: hidden !important;
 }
 
 .login-role-copy strong {
-  font-size: 13px !important;
-  font-weight: 750 !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  display: block !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
 }
 
 .login-role-copy small {
-  font-size: 11px !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 10.5px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+  display: block !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2 !important;
 }
 
 .login-card form {
+  display: flex !important;
+  flex-direction: column !important;
   gap: 11px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .login-field {
-  font-size: 13px !important;
+  display: flex !important;
+  flex-direction: column !important;
   gap: 5px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .login-field > input,
 .password-control {
+  width: 100% !important;
   height: 41px !important;
   border-radius: 9px !important;
+  border: 1px solid #cbd5e1 !important;
+  background: #ffffff !important;
+  box-sizing: border-box !important;
 }
 
-.login-field > input,
+.password-control {
+  display: flex !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+
 .password-control > input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  border: none !important;
+  padding: 0 12px !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+  outline: none !important;
   font-size: 14px !important;
 }
 
+.password-control > button {
+  width: 38px !important;
+  height: 100% !important;
+  display: grid !important;
+  place-items: center !important;
+  background: transparent !important;
+  border: none !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+
+.login-field > input {
+  padding: 0 12px !important;
+  outline: none !important;
+  font-size: 14px !important;
+}
+
+.login-field > input:focus,
+.password-control:focus-within {
+  border-color: var(--login-accent, #4f46e5) !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12) !important;
+}
+
 .remember-row {
-  margin: 2px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin: 1px 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .remember-check-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
   font-size: 12.5px !important;
+  color: #475569 !important;
+  cursor: pointer !important;
 }
 
 .remember-row > button {
+  background: none !important;
+  border: none !important;
+  color: var(--login-accent, #4f46e5) !important;
   font-size: 12.5px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
 }
 
 .login-error {
   padding: 8px 11px !important;
   font-size: 12.5px !important;
+  border-radius: 7px !important;
 }
 
 .login-submit {
+  width: 100% !important;
   height: 43px !important;
   font-size: 14.5px !important;
+  font-weight: 700 !important;
   border-radius: 9px !important;
+  border: none !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: all 0.15s ease !important;
+}
+
+.login-submit:hover:not(:disabled) {
+  opacity: 0.93 !important;
+  transform: translateY(-1px) !important;
 }
 
 .demo-box {
@@ -3104,6 +3297,7 @@ body,
   border: 1px solid #e2e8f0 !important;
   background: #f8fafc !important;
   box-sizing: border-box !important;
+  width: 100% !important;
   max-width: 100% !important;
   overflow: hidden !important;
 }
@@ -3114,8 +3308,8 @@ body,
   justify-content: space-between !important;
   gap: 8px !important;
   margin-bottom: 7px !important;
+  width: 100% !important;
   box-sizing: border-box !important;
-  max-width: 100% !important;
 }
 
 .demo-box-badge-group {
@@ -3181,6 +3375,7 @@ body,
   margin-top: 0 !important;
   flex-wrap: wrap !important;
   box-sizing: border-box !important;
+  width: 100% !important;
   max-width: 100% !important;
 }
 
@@ -3193,9 +3388,8 @@ body,
   padding: 3px 8px !important;
   border-radius: 6px !important;
   min-width: 0 !important;
-  flex: 1 1 auto !important;
+  flex: 1 1 0% !important;
   box-sizing: border-box !important;
-  max-width: 100% !important;
   overflow: hidden !important;
 }
 
@@ -3226,17 +3420,97 @@ body,
 
 @media (max-width: 900px) {
   .login-page {
-    height: auto !important;
-    max-height: none !important;
-    overflow: auto !important;
     grid-template-columns: 1fr !important;
+    min-height: 100vh !important;
+    height: auto !important;
   }
   .login-brand-panel {
-    height: auto !important;
-    padding: 20px 24px !important;
+    display: none !important;
+  }
+  .login-mobile-brand-tag {
+    display: inline-flex !important;
   }
   .login-form-panel {
+    padding: 18px 16px !important;
+    min-height: 100vh !important;
     height: auto !important;
-    padding: 20px 16px 32px !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .login-card {
+    padding: 18px 14px !important;
+    border-radius: 14px !important;
+    max-width: 100% !important;
+  }
+  .login-heading h2 {
+    font-size: 22px !important;
+  }
+  .login-heading > p {
+    font-size: 12.5px !important;
+  }
+  .login-role-grid {
+    gap: 6px !important;
+    margin: 10px 0 12px !important;
+  }
+  .login-role {
+    min-height: 54px !important;
+    padding: 6px 4px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 4px !important;
+  }
+  .login-role-icon {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .login-role-copy {
+    align-items: center !important;
+    width: 100% !important;
+  }
+  .login-role-copy strong {
+    font-size: 11px !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  .login-role-copy small {
+    display: none !important;
+  }
+  .login-panel-topbar {
+    margin-bottom: 11px !important;
+  }
+  .login-back {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+  .login-active-pill {
+    font-size: 10.5px !important;
+    padding: 2.5px 7px !important;
+  }
+  .login-pill-role-full {
+    display: none !important;
+  }
+  .login-pill-role-short {
+    display: inline !important;
+  }
+  .login-pill-portal {
+    display: none !important;
+  }
+  .login-field > input,
+  .password-control {
+    height: 39px !important;
+  }
+  .login-submit {
+    height: 41px !important;
+    font-size: 14px !important;
+  }
+  .demo-box {
+    padding: 8px 10px !important;
+    margin-top: 11px !important;
+  }
+  .demo-hint-text {
+    display: none !important;
   }
 }
