@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
-import { Activity, ArrowRight, ArrowUpRight, Bell, BookOpen, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, ClipboardCheck, Download, GraduationCap, LayoutDashboard, LifeBuoy, Mail, Menu, MoreHorizontal, Plus, Search, Settings2, ShieldCheck, Sparkles, Users, Wallet, X } from 'lucide-react';
+import { Activity, ArrowRight, ArrowUpRight, Bell, BookOpen, CalendarDays, Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight, ClipboardCheck, Download, GraduationCap, LayoutDashboard, LifeBuoy, Mail, Menu, Moon, MoreHorizontal, Plus, Search, Settings2, ShieldCheck, Sparkles, Sun, Trash2, Users, Wallet, X } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +19,10 @@ const students = [
     { name: 'Olivia Rhye', id: 'STU-24018', grade: 'Grade 10 · A', program: 'Science', attendance: '98%', status: 'Active', initials: 'OR', tone: 'mint' },
     { name: 'Phoenix Baker', id: 'STU-24017', grade: 'Grade 9 · B', program: 'Arts', attendance: '94%', status: 'Active', initials: 'PB', tone: 'lavender' },
     { name: 'Lana Steiner', id: 'STU-24016', grade: 'Grade 11 · A', program: 'Commerce', attendance: '88%', status: 'Review', initials: 'LS', tone: 'peach' },
-    { name: 'Demi Wilkinson', id: 'STU-24015', grade: 'Grade 8 · C', program: 'Science', attendance: '96%', status: 'Active', initials: 'DW', tone: 'blue' },
+    { name: 'Demi Wilkinson', id: 'STU-24015', grade: 'Grade 9 · A', program: 'Science', attendance: '96%', status: 'Active', initials: 'DW', tone: 'blue' },
+    { name: 'Emma Thompson', id: 'STU-24014', grade: 'Grade 9 · A', program: 'Science', attendance: '97%', status: 'Active', initials: 'ET', tone: 'mint' },
+    { name: 'Avery Johnson', id: 'STU-24013', grade: 'Grade 10 · B', program: 'Arts', attendance: '91%', status: 'Active', initials: 'AJ', tone: 'peach' },
+    { name: 'Liam Walker', id: 'STU-24012', grade: 'Grade 11 · B', program: 'Science', attendance: '95%', status: 'Active', initials: 'LW', tone: 'blue' },
 ];
 const events = [
     { time: '08:30 AM', title: 'Morning assembly', detail: 'Main auditorium', tone: 'green' },
@@ -42,6 +45,44 @@ export function SchoolDashboard() {
     const [query, setQuery] = useState('');
     const [menuOpen, setMenuOpen] = useState(false);
     const [notice, setNotice] = useState('');
+    const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('northstar-theme') || 'light';
+        }
+        return 'light';
+    });
+    const [notifOpen, setNotifOpen] = useState(false);
+    const [notifications, setNotifications] = useState([
+        { id: 'notif-1', title: 'Attendance recorded', detail: 'Grade 10 · Section A attendance submitted (34/35 Present).', time: '12m ago', unread: true, type: 'attendance' },
+        { id: 'notif-2', title: 'Tuition payment received', detail: 'Invoice #INV-24016 paid ($1,250.00) by Robert Steiner.', time: '45m ago', unread: true, type: 'payment' },
+        { id: 'notif-3', title: 'Midterm assessments published', detail: 'Admin published official grades for 6 subjects. Guardians notified.', time: '2h ago', unread: false, type: 'exam' },
+    ]);
+    const unreadCount = notifications.filter((n) => n.unread).length;
+
+    function toggleTheme() {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+        if (typeof window !== 'undefined') {
+            const root = document.documentElement;
+            if (next === 'dark') {
+                root.classList.add('dark');
+                root.setAttribute('data-theme', 'dark');
+            } else {
+                root.classList.remove('dark');
+                root.setAttribute('data-theme', 'light');
+            }
+            localStorage.setItem('northstar-theme', next);
+        }
+    }
+
+    function markAllRead() {
+        setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+        notify('All notifications marked as read.');
+    }
+
+    function toggleRead(id) {
+        setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, unread: !n.unread } : n)));
+    }
     const copy = roleCopy[role];
     const filtered = useMemo(() => students.filter((student) => `${student.name} ${student.id} ${student.program}`.toLowerCase().includes(query.toLowerCase())), [query]);
     function notify(message) {
@@ -60,9 +101,88 @@ export function SchoolDashboard() {
       </aside>
       {menuOpen && <button aria-label="Close navigation overlay" className="mobile-scrim" onClick={() => setMenuOpen(false)}/>}
       <main className="main-area">
-        <header className="topbar"><button aria-label="Open navigation" className="mobile-menu" onClick={() => setMenuOpen(true)}><Menu size={21}/></button><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14}/><strong>{activeNav}</strong></div><div className="topbar-actions"><label className="search-box"><Search size={16}/><input aria-label="Search" placeholder="Search anything..." value={query} onChange={(event) => setQuery(event.target.value)}/><kbd>⌘ K</kbd></label><button className="icon-button notification-button" aria-label="Notifications" onClick={() => notify('You’re all caught up!')}><Bell size={18}/><span /></button><div className="top-divider"/><div className="role-switcher" aria-label="Choose dashboard role">{['Admin', 'Teacher', 'Guardian'].map((item) => <button key={item} className={role === item ? 'role-selected' : ''} onClick={() => setRole(item)}>{item}</button>)}</div></div></header>
+        <header className="topbar">
+          <button aria-label="Open navigation" className="mobile-menu" onClick={() => setMenuOpen(true)}>
+            <Menu size={21}/>
+          </button>
+          <div className="breadcrumb">
+            <span>Workspace</span>
+            <ChevronRight size={14}/>
+            <strong>{activeNav}</strong>
+          </div>
+          <div className="topbar-actions">
+            <label className="search-box">
+              <Search size={16}/>
+              <input aria-label="Search" placeholder="Search anything..." value={query} onChange={(event) => setQuery(event.target.value)}/>
+              <kbd>⌘ K</kbd>
+            </label>
+            <button
+              className="icon-button theme-toggle-button"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun size={17}/> : <Moon size={17}/>}
+            </button>
+            <div className="role-notif-wrap">
+              <button
+                className="icon-button notification-button"
+                aria-label={`Notifications, ${unreadCount} unread`}
+                onClick={() => setNotifOpen(!notifOpen)}
+              >
+                <Bell size={18}/>
+                {unreadCount > 0 && <span />}
+              </button>
+              {notifOpen && (
+                <div className="notif-dropdown" role="dialog" aria-label="Notifications panel">
+                  <div className="notif-header">
+                    <div className="notif-title-row">
+                      <strong>Notifications</strong>
+                      {unreadCount > 0 && <span className="notif-badge">{unreadCount} new</span>}
+                    </div>
+                    <div className="notif-header-actions">
+                      {unreadCount > 0 && (
+                        <button type="button" className="notif-action-btn" onClick={markAllRead}>
+                          <CheckCheck size={14}/> Mark read
+                        </button>
+                      )}
+                      <button type="button" className="notif-close-btn" onClick={() => setNotifOpen(false)} aria-label="Close">
+                        <X size={15}/>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="notif-list">
+                    {notifications.map((item) => (
+                      <div key={item.id} className={`notif-item ${item.unread ? 'notif-unread' : ''}`} onClick={() => toggleRead(item.id)}>
+                        <span className={`notif-icon notif-icon-${item.type}`}>
+                          {item.type === 'attendance' && <ClipboardCheck size={14}/>}
+                          {item.type === 'payment' && <Wallet size={14}/>}
+                          {item.type === 'exam' && <FileBarChart size={14}/>}
+                        </span>
+                        <div className="notif-copy">
+                          <div className="notif-item-top">
+                            <strong>{item.title}</strong>
+                            <small>{item.time}</small>
+                          </div>
+                          <p>{item.detail}</p>
+                        </div>
+                        {item.unread && <span className="notif-unread-dot"/>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="top-divider"/>
+            <div className="role-switcher" aria-label="Choose dashboard role">
+              {['Admin', 'Teacher', 'Guardian'].map((item) => (
+                <button key={item} className={role === item ? 'role-selected' : ''} onClick={() => setRole(item)}>{item}</button>
+              ))}
+            </div>
+          </div>
+        </header>
         <div className="content-wrap">
-          <section className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-line"/> MONDAY, OCTOBER 21, 2024</div><h1>{copy.greeting}<span className="wave">✳</span></h1><p>{copy.subtitle}</p></div><div className="welcome-actions"><button className="outline-button" onClick={() => notify('Your report is ready to download')}><Download size={15}/> Export report</button><button className="primary-button" onClick={() => notify(role === 'Admin' ? 'New student form opened' : role === 'Teacher' ? 'New assignment form opened' : 'Message your school')}><Plus size={16}/> {role === 'Admin' ? 'Add student' : role === 'Teacher' ? 'New assignment' : 'Contact school'}</button></div></section>
+          <section className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-line"/> MONDAY, OCTOBER 21, 2024</div><h1>{copy.greeting}<span className="wave">✳</span></h1><p>{copy.subtitle}</p></div><div className="welcome-actions"><button className="outline-button" onClick={() => notify('Your report is ready to download')}><Download size={15}/> Export report</button><button className="primary-button" onClick={() => notify(role === 'Admin' ? 'New student form opened' : role === 'Teacher' ? 'New assignment form opened' : 'Message your school')}><Plus size={16}/> {role === 'Admin' ? 'Add' : role === 'Teacher' ? 'New assignment' : 'Contact school'}</button></div></section>
           {activeNav !== 'Overview' && <div className="section-notice"><Sparkles size={16}/> You’re viewing the <strong>{activeNav}</strong> workspace. Dashboard highlights remain below for a quick overview.</div>}
           <section className="stats-grid" aria-label={`${role} dashboard summary`}>{copy.stats.map(([label, value, trend, tone, Icon]) => <Card key={label} className="stat-card"><CardContent className="stat-content"><div className={`stat-icon stat-${tone}`}><Icon size={18} strokeWidth={1.9}/></div><span className="stat-trend"><ArrowUpRight size={13}/> {trend}</span><span className="stat-label">{label}</span><div className="stat-value">{value}</div><span className="stat-foot">Compared to last month</span></CardContent></Card>)}</section>
           <section className="middle-grid"><Card className="chart-card"><CardHeader className="chart-header"><div><div className="chart-title-row"><CardTitle>{copy.title}</CardTitle><Badge className="live-badge"><span /> Live</Badge></div><p>{copy.chartLabel} <span className="chart-period-dot">·</span> Updated just now</p></div><button className="period-select" onClick={() => setPeriod(period === 'This year' ? 'This month' : period === 'This month' ? 'This week' : 'This year')}>{period}<ChevronDown size={14}/></button></CardHeader><CardContent className="chart-content"><div className="chart-summary"><span className="chart-total">{role === 'Admin' ? '2,840' : role === 'Teacher' ? '124' : '97.8%'}<span className="chart-total-caption"> total this year</span></span><span className="chart-growth"><ArrowUpRight size={14}/> 12.8%</span></div><ChartContainer config={chartConfig} className="enrollment-chart"><AreaChart accessibilityLayer data={enrollmentData} margin={{ left: -20, right: 5, top: 8, bottom: 0 }}><defs><linearGradient id="fillStudents" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--color-students)" stopOpacity={0.22}/><stop offset="95%" stopColor="var(--color-students)" stopOpacity={0.01}/></linearGradient><linearGradient id="fillTeachers" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--color-teachers)" stopOpacity={0.14}/><stop offset="95%" stopColor="var(--color-teachers)" stopOpacity={0.01}/></linearGradient></defs><CartesianGrid vertical={false} strokeDasharray="3 4" stroke="#edf0f4"/><XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#99a1af', fontSize: 11 }} tickMargin={12}/><YAxis axisLine={false} tickLine={false} tick={{ fill: '#99a1af', fontSize: 11 }} tickFormatter={(value) => `${value / 1000}k`} tickCount={5}/><Tooltip contentStyle={{ borderRadius: 12, border: '1px solid #edf0f4', boxShadow: '0 8px 24px #1e293b12', fontSize: 12 }}/><Area type="monotone" dataKey="students" stroke="var(--color-students)" strokeWidth={2.5} fill="url(#fillStudents)"/><Area type="monotone" dataKey="teachers" stroke="var(--color-teachers)" strokeWidth={2} fill="url(#fillTeachers)"/></AreaChart></ChartContainer><div className="chart-legend"><span><i className="legend-students"/> Students</span><span><i className="legend-teachers"/> Teaching staff</span></div></CardContent></Card>

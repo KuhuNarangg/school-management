@@ -188,7 +188,7 @@ export async function seedDatabase() {
         { teacherId: t5.id, classId: g11.id, sectionId: g11.sections[0].id, subjectId: csc.id, scheduleTime: '03:00', scheduleRoom: 'Lab 1', isHomeroom: false },
     ];
     await prisma.teacherAssignment.createMany({ data: assignmentsData });
-    // 7. 60 Students
+    // 7. 7 Sample Students (Easy for sampling and demo)
     const featuredStudents = [
         { name: 'Olivia Rhye', code: 'STU-24018', clsIdx: 1, secIdx: 0, program: 'Science', status: 'ACTIVE' },
         { name: 'Phoenix Baker', code: 'STU-24017', clsIdx: 0, secIdx: 1, program: 'Arts', status: 'ACTIVE' },
@@ -196,84 +196,39 @@ export async function seedDatabase() {
         { name: 'Demi Wilkinson', code: 'STU-24015', clsIdx: 0, secIdx: 0, program: 'Science', status: 'ACTIVE' },
         { name: 'Emma Thompson', code: 'STU-24014', clsIdx: 0, secIdx: 0, program: 'Science', status: 'ACTIVE' },
         { name: 'Avery Johnson', code: 'STU-24013', clsIdx: 1, secIdx: 1, program: 'Arts', status: 'ACTIVE' },
+        { name: 'Liam Walker', code: 'STU-24012', clsIdx: 2, secIdx: 1, program: 'Science', status: 'ACTIVE' },
     ];
-    const firstNames = [
-        'Noah', 'Liam', 'Mason', 'Ethan', 'Lucas', 'Aiden', 'Caleb', 'Nathan', 'Owen', 'Julian',
-        'Sophia', 'Mia', 'Amelia', 'Harper', 'Evelyn', 'Abigail', 'Ella', 'Scarlett', 'Grace', 'Chloe',
-        'Zoe', 'Lily', 'Hannah', 'Aria', 'Nora', 'Riley', 'Hazel', 'Violet', 'Aurora', 'Savannah',
-        'Leo', 'Isaac', 'Gabriel', 'Anthony', 'Dylan', 'Lincoln', 'Thomas', 'Charles', 'Ezra', 'Hudson',
-        'Claire', 'Skylar', 'Lucy', 'Paisley', 'Everly', 'Anna', 'Caroline', 'Nova', 'Genesis', 'Emilia',
-        'Kennedy', 'Samantha', 'Maya', 'Willow', 'Kinsley', 'Naomi', 'Aaliyah', 'Elena', 'Sarah', 'Ariana',
-    ];
-    const lastNames = [
-        'Anderson', 'Martinez', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'White', 'Harris',
-        'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King', 'Wright',
-        'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Hall', 'Rivera',
-    ];
-    const programs = ['Science', 'Arts', 'Commerce'];
-    const allSections = [];
-    for (const cls of schoolClasses) {
-        for (const sec of cls.sections) {
-            allSections.push({ id: sec.id, name: sec.name, classId: cls.id, className: cls.name });
-        }
-    }
     const studentsToCreate = [];
-    for (let i = 0; i < 60; i++) {
-        let name;
-        let studentCode;
-        let sectionObj;
-        let program;
-        let status;
-        if (i < featuredStudents.length) {
-            const f = featuredStudents[i];
-            name = f.name;
-            studentCode = f.code;
-            const cls = schoolClasses[f.clsIdx];
-            const sec = cls.sections[f.secIdx];
-            sectionObj = { id: sec.id, name: sec.name, classId: cls.id, className: cls.name };
-            program = f.program;
-            status = f.status;
-        }
-        else {
-            const fn = firstNames[i % firstNames.length];
-            const ln = lastNames[i % lastNames.length];
-            name = `${fn} ${ln}`;
-            studentCode = `STU-${24019 + i}`;
-            sectionObj = allSections[i % allSections.length];
-            program = programs[i % programs.length];
-            status = i % 9 === 0 ? 'REVIEW' : 'ACTIVE';
-        }
-        const emailSlug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '.')}.${i + 1}@student.northstar.demo`;
+    for (let i = 0; i < featuredStudents.length; i++) {
+        const f = featuredStudents[i];
+        const cls = schoolClasses[f.clsIdx];
+        const sec = cls.sections[f.secIdx];
         studentsToCreate.push({
             id: `student-${i + 1}`,
-            studentCode,
-            name,
-            email: i < 6 ? `${name.toLowerCase().replaceAll(' ', '.')}@school.demo` : emailSlug,
-            initials: initialsFromName(name),
+            studentCode: f.code,
+            name: f.name,
+            email: `${f.name.toLowerCase().replaceAll(' ', '.')}@school.demo`,
+            initials: initialsFromName(f.name),
             dateOfBirth: new Date(2010 - (i % 3), (i * 2) % 12, (i % 27) + 1),
             gender: i % 2 === 0 ? 'Female' : 'Male',
-            program,
-            status,
-            classId: sectionObj.classId,
-            sectionId: sectionObj.id,
-            createdAt: new Date(Date.now() - (60 - i) * 60000),
+            program: f.program,
+            status: f.status,
+            classId: cls.id,
+            sectionId: sec.id,
+            createdAt: new Date(Date.now() - (7 - i) * 60000),
         });
     }
     await prisma.student.createMany({ data: studentsToCreate });
     const createdStudents = studentsToCreate;
-    // 8. 45 Guardians
+    // 8. 5 Guardians
     const guardianNames = [
         'Jamie Morgan', 'Robert Steiner', 'Claire Wilkinson', 'Michael Thompson', 'Patricia Johnson',
-        'Daniel Anderson', 'Laura Martinez', 'Steven Taylor', 'Rachel Moore', 'Kevin Jackson',
-        'Angela Martin', 'Brian Lee', 'Melissa Perez', 'Jason White', 'Rebecca Harris',
     ];
     const guardianUsersBatch = [];
     const guardianProfilesBatch = [];
     const studentGuardianBatch = [];
-    for (let g = 0; g < 45; g++) {
-        const gName = g < guardianNames.length
-            ? guardianNames[g]
-            : `Guardian ${firstNames[(g + 15) % firstNames.length]} ${lastNames[g % lastNames.length]}`;
+    for (let g = 0; g < guardianNames.length; g++) {
+        const gName = guardianNames[g];
         const gEmail = g === 0
             ? 'guardian@school.demo'
             : g === 1
@@ -302,19 +257,23 @@ export async function seedDatabase() {
             address: `${100 + g} Maple Avenue, Springfield, IL`,
             emergencyPhone: `+1 (555) 900-${String(1000 + g)}`,
         });
-        if (g < 15) {
-            const child1 = createdStudents[g * 2];
-            const child2 = createdStudents[g * 2 + 1];
-            studentGuardianBatch.push({ studentId: child1.id, guardianId: profileId, relationship: 'Parent', isPrimary: true }, { studentId: child2.id, guardianId: profileId, relationship: 'Parent', isPrimary: true });
-        }
-        else {
-            const child = createdStudents[30 + (g - 15)];
-            studentGuardianBatch.push({
-                studentId: child.id,
-                guardianId: profileId,
-                relationship: 'Parent',
-                isPrimary: true,
-            });
+        if (g === 0) {
+            // guardian@school.demo has 2 children (Olivia Rhye & Phoenix Baker)
+            studentGuardianBatch.push(
+                { studentId: createdStudents[0].id, guardianId: profileId, relationship: 'Parent', isPrimary: true },
+                { studentId: createdStudents[1].id, guardianId: profileId, relationship: 'Parent', isPrimary: true }
+            );
+        } else if (g === 1) {
+            studentGuardianBatch.push({ studentId: createdStudents[2].id, guardianId: profileId, relationship: 'Parent', isPrimary: true });
+        } else if (g === 2) {
+            studentGuardianBatch.push({ studentId: createdStudents[3].id, guardianId: profileId, relationship: 'Parent', isPrimary: true });
+        } else if (g === 3) {
+            studentGuardianBatch.push({ studentId: createdStudents[4].id, guardianId: profileId, relationship: 'Parent', isPrimary: true });
+        } else if (g === 4) {
+            studentGuardianBatch.push(
+                { studentId: createdStudents[5].id, guardianId: profileId, relationship: 'Parent', isPrimary: true },
+                { studentId: createdStudents[6].id, guardianId: profileId, relationship: 'Parent', isPrimary: true }
+            );
         }
     }
     await prisma.user.createMany({ data: guardianUsersBatch });
@@ -475,15 +434,9 @@ export async function seedDatabase() {
     });
     const invoicesBatch = [];
     const paymentsBatch = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < createdStudents.length; i++) {
         const st = createdStudents[i];
-        const invoiceNo = i === 0
-            ? 'INV-24018'
-            : i === 1
-                ? 'INV-24017'
-                : i === 2
-                    ? 'INV-24016'
-                    : `INV-${24020 + i}`;
+        const invoiceNo = `INV-${st.studentCode.replace('STU-', '')}`;
         const isActivity = i === 1;
         const totalCents = isActivity ? 18000 : 125000;
         const title = isActivity ? 'Activity fee' : 'Term 2 tuition';
@@ -491,9 +444,9 @@ export async function seedDatabase() {
             ? new Date('2026-10-25T00:00:00.000Z')
             : new Date('2026-10-28T00:00:00.000Z');
         let status = 'UNPAID';
-        if (i === 2 || (i >= 9 && i <= 17))
+        if (i === 2 || i === 0)
             status = 'PAID';
-        else if (i >= 3 && i <= 8)
+        else if (i === 1 || i === 4)
             status = 'PARTIAL';
         const invId = `invoice-${i + 1}`;
         invoicesBatch.push({
@@ -575,7 +528,7 @@ export async function seedDatabase() {
             },
         ],
     });
-    console.log('✅ MongoDB Atlas seed completed: 1 Admin, 5 Teachers, 3 Classes (6 Sections), 6 Subjects, 60 Students, 45 Guardians, 30 days Attendance, 2 Exams, Grade Bands, and Fee Invoices/Payments.');
+    console.log('✅ MongoDB Atlas seed completed: 1 Admin, 5 Teachers, 3 Classes (6 Sections), 6 Subjects, 7 Students, 5 Guardians, 30 days Attendance, 2 Exams, Grade Bands, and Fee Invoices/Payments.');
 }
 if (require.main === module) {
     seedDatabase()

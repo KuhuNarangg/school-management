@@ -47,6 +47,7 @@ export const schoolStudents = [
     { name: 'Demi Wilkinson', id: 'STU-24015', grade: 'Grade 8 · C', program: 'Science', attendance: '96%', status: 'Active', initials: 'DW' },
     { name: 'Emma Thompson', id: 'STU-24014', grade: 'Grade 9 · A', program: 'Science', attendance: '97%', status: 'Active', initials: 'ET' },
     { name: 'Avery Johnson', id: 'STU-24013', grade: 'Grade 10 · B', program: 'Arts', attendance: '91%', status: 'Active', initials: 'AJ' },
+    { name: 'Liam Walker', id: 'STU-24012', grade: 'Grade 11 · B', program: 'Science', attendance: '95%', status: 'Active', initials: 'LW' },
 ];
 export const teacherStudents = schoolStudents.filter((student) => student.grade.startsWith('Grade 10'));
 export const guardianChildren = schoolStudents.filter((student) => ['Olivia Rhye', 'Phoenix Baker'].includes(student.name));

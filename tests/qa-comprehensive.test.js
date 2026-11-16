@@ -50,7 +50,7 @@ async function makeAuthedRequest(url, email, method = 'GET', body) {
 describe('Comprehensive QA Suite — Auth, RBAC, CRUD, Attendance, Exams, Fees & Ledger', () => {
     beforeAll(async () => {
         const count = await prisma.student.count();
-        expect(count).toBeGreaterThanOrEqual(60);
+        expect(count).toBeGreaterThanOrEqual(5);
     });
     describe('Section 3: Authentication & Session Security', () => {
         it('authenticates valid credentials and returns user profile via /api/auth/me', async () => {

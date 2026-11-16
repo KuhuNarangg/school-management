@@ -2,7 +2,7 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Bell, BookOpen, CalendarCheck2, Check, ChevronDown, ChevronRight, CircleHelp, ClipboardCheck, Command, FileBarChart, FileClock, GraduationCap, HeartHandshake, LayoutDashboard, ListChecks, LogOut, Menu, MoreHorizontal, Plus, Search, Settings2, Users, Wallet, } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Bell, BookOpen, CalendarCheck2, Check, CheckCheck, ChevronDown, ChevronRight, CircleHelp, ClipboardCheck, Command, FileBarChart, FileClock, GraduationCap, HeartHandshake, LayoutDashboard, ListChecks, LogOut, Menu, Moon, MoreHorizontal, Plus, Search, Settings2, Sun, Trash2, Users, Wallet, X, } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -63,6 +63,176 @@ export function RoleShell({ role, children }) {
     const [notice, setNotice] = useState('');
     const [recent, setRecent] = useState([]);
     const searchRef = useRef(null);
+    const notifRef = useRef(null);
+    const guardianNotifRef = useRef(null);
+
+    const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('northstar-theme') || 'light';
+        }
+        return 'light';
+    });
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const root = document.documentElement;
+            if (theme === 'dark') {
+                root.classList.add('dark');
+                root.setAttribute('data-theme', 'dark');
+            } else {
+                root.classList.remove('dark');
+                root.setAttribute('data-theme', 'light');
+            }
+            localStorage.setItem('northstar-theme', theme);
+        }
+    }, [theme]);
+
+    function toggleTheme() {
+        setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    }
+
+    const [notifications, setNotifications] = useState([
+        {
+            id: 'notif-1',
+            title: 'Attendance recorded',
+            detail: 'Daily attendance submitted for Grade 10 · Section A (34/35 Present).',
+            time: '12m ago',
+            unread: true,
+            type: 'attendance',
+        },
+        {
+            id: 'notif-2',
+            title: 'Tuition payment received',
+            detail: 'Invoice #INV-24016 paid ($1,250.00) by Robert Steiner via Bank Transfer.',
+            time: '45m ago',
+            unread: true,
+            type: 'payment',
+        },
+        {
+            id: 'notif-3',
+            title: 'Midterm assessments published',
+            detail: 'Admin approved and published official grades for 6 subjects. Guardians notified.',
+            time: '2h ago',
+            unread: false,
+            type: 'exam',
+        },
+        {
+            id: 'notif-4',
+            title: 'New student enrolled',
+            detail: 'Liam Walker enrolled in Grade 11 · Section B (Science).',
+            time: 'Yesterday',
+            unread: false,
+            type: 'student',
+        },
+    ]);
+    const [notifOpen, setNotifOpen] = useState(false);
+    const unreadCount = notifications.filter((n) => n.unread).length;
+
+    function markAllRead() {
+        setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+        setNotice('All notifications marked as read.');
+    }
+
+    function toggleRead(id) {
+        setNotifications((prev) =>
+            prev.map((n) => (n.id === id ? { ...n, unread: !n.unread } : n))
+        );
+    }
+
+    function clearNotification(id) {
+        setNotifications((prev) => prev.filter((n) => n.id !== id));
+    }
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                notifRef.current &&
+                !notifRef.current.contains(event.target) &&
+                (!guardianNotifRef.current || !guardianNotifRef.current.contains(event.target))
+            ) {
+                setNotifOpen(false);
+            }
+        }
+        if (notifOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [notifOpen]);
+
+    const notificationDropdown = (
+        <div className="notif-dropdown" role="dialog" aria-label="Notifications panel">
+            <div className="notif-header">
+                <div className="notif-title-row">
+                    <strong>Notifications</strong>
+                    {unreadCount > 0 && <span className="notif-badge">{unreadCount} new</span>}
+                </div>
+                <div className="notif-header-actions">
+                    {unreadCount > 0 && (
+                        <button type="button" className="notif-action-btn" onClick={markAllRead} title="Mark all as read">
+                            <CheckCheck size={14}/> Mark read
+                        </button>
+                    )}
+                    <button type="button" className="notif-close-btn" onClick={() => setNotifOpen(false)} aria-label="Close notifications">
+                        <X size={15}/>
+                    </button>
+                </div>
+            </div>
+            <div className="notif-list">
+                {notifications.length === 0 ? (
+                    <div className="notif-empty">
+                        <div className="notif-empty-icon"><Bell size={22}/></div>
+                        <strong>All caught up!</strong>
+                        <p>No new notifications right now.</p>
+                    </div>
+                ) : (
+                    notifications.map((item) => (
+                        <div
+                            key={item.id}
+                            className={`notif-item ${item.unread ? 'notif-unread' : ''}`}
+                            onClick={() => toggleRead(item.id)}
+                            role="button"
+                            tabIndex={0}
+                            title="Click to toggle read status"
+                        >
+                            <span className={`notif-icon notif-icon-${item.type}`}>
+                                {item.type === 'attendance' && <ClipboardCheck size={14}/>}
+                                {item.type === 'payment' && <Wallet size={14}/>}
+                                {item.type === 'exam' && <FileBarChart size={14}/>}
+                                {item.type === 'student' && <GraduationCap size={14}/>}
+                            </span>
+                            <div className="notif-copy">
+                                <div className="notif-item-top">
+                                    <strong>{item.title}</strong>
+                                    <small>{item.time}</small>
+                                </div>
+                                <p>{item.detail}</p>
+                            </div>
+                            <button
+                                type="button"
+                                className="notif-delete-btn"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    clearNotification(item.id);
+                                }}
+                                title="Remove notification"
+                                aria-label="Delete notification"
+                            >
+                                <Trash2 size={13}/>
+                            </button>
+                            {item.unread && <span className="notif-unread-dot"/>}
+                        </div>
+                    ))
+                )}
+            </div>
+            {notifications.length > 0 && (
+                <div className="notif-footer">
+                    <button type="button" className="notif-clear-all" onClick={() => setNotifications([])}>
+                        Clear all notifications
+                    </button>
+                </div>
+            )}
+        </div>
+    );
     useEffect(() => {
         let active = true;
         async function loadSessionData() {
@@ -345,6 +515,26 @@ export function RoleShell({ role, children }) {
               </button>))}
           </div>
           <div className="guardian-user">
+            <button
+              className="role-theme-toggle"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun size={17}/> : <Moon size={17}/>}
+            </button>
+            <div className="role-notif-wrap" ref={guardianNotifRef}>
+              <button
+                className="role-bell"
+                aria-label={`Notifications, ${unreadCount} unread`}
+                aria-expanded={notifOpen}
+                onClick={() => setNotifOpen(!notifOpen)}
+              >
+                <Bell size={18}/>
+                {unreadCount > 0 && <i>{unreadCount}</i>}
+              </button>
+              {notifOpen && notificationDropdown}
+            </div>
             <Link href="/login" className="switch-role-pill">
               Switch role
             </Link>
@@ -368,13 +558,29 @@ export function RoleShell({ role, children }) {
                 <span>Search anything</span>
                 <kbd>⌘ K</kbd>
               </button>
+              <button
+                className="role-theme-toggle"
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                onClick={toggleTheme}
+                title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              >
+                {theme === 'dark' ? <Sun size={17}/> : <Moon size={17}/>}
+              </button>
               <Link href="/login" className="switch-role-pill">
                 Switch role
               </Link>
-              <button className="role-bell" aria-label="Notifications, 2 unread" onClick={() => showNotice('You’re all caught up on your notifications.')}>
-                <Bell size={18}/>
-                <i>2</i>
-              </button>
+              <div className="role-notif-wrap" ref={notifRef}>
+                <button
+                  className="role-bell"
+                  aria-label={`Notifications, ${unreadCount} unread`}
+                  aria-expanded={notifOpen}
+                  onClick={() => setNotifOpen(!notifOpen)}
+                >
+                  <Bell size={18}/>
+                  {unreadCount > 0 && <i>{unreadCount}</i>}
+                </button>
+                {notifOpen && notificationDropdown}
+              </div>
               {isAdmin && (<button className="role-add-global" onClick={() => setActionOpen(true)} aria-label="Quick actions">
                   <Plus size={17}/>
                 </button>)}
@@ -421,7 +627,7 @@ export function RoleShell({ role, children }) {
                 }}>
                     <Plus size={15}/>{' '}
                     {pageTitle === 'Overview'
-                    ? 'Add student'
+                    ? 'Add'
                     : pageTitle.includes('Fee')
                         ? 'Create invoice'
                         : `Add ${pageTitle.toLowerCase().replace(/s$/, '')}`}
