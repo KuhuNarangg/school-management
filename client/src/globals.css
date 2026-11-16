@@ -2924,3 +2924,222 @@ body,
     justify-content: center;
   }
 }
+
+
+/* ============================================================================
+   Compact Single-Screen Bold Login Page Override (Fits 100vh Zero Scroll)
+   ============================================================================ */
+
+.login-page {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  display: grid !important;
+  grid-template-columns: 42% 58% !important;
+}
+
+.login-brand-panel {
+  height: 100vh !important;
+  min-height: 0 !important;
+  padding: 32px 44px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.login-brand-copy {
+  margin: auto 0 !important;
+  padding: 0 !important;
+}
+
+.login-brand-copy h1 {
+  font-size: clamp(30px, 3.2vw, 42px) !important;
+  font-weight: 850 !important;
+  line-height: 1.1 !important;
+  margin: 16px 0 12px !important;
+}
+
+.login-brand-copy > p {
+  font-size: 15.5px !important;
+  line-height: 1.55 !important;
+}
+
+.login-form-panel {
+  height: 100vh !important;
+  min-height: 0 !important;
+  padding: 20px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.login-card {
+  width: min(100%, 470px) !important;
+  margin: 0 !important;
+  padding: 24px 26px !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 16px 36px -10px rgba(15, 23, 42, 0.08) !important;
+}
+
+.login-panel-topbar {
+  width: 100% !important;
+  margin-bottom: 14px !important;
+}
+
+.login-back {
+  padding: 5px 10px !important;
+  font-size: 13px !important;
+}
+
+.login-active-pill {
+  font-size: 11.5px !important;
+  padding: 4px 10px !important;
+}
+
+.login-heading h2 {
+  font-size: 25px !important;
+  font-weight: 850 !important;
+  margin: 0 0 3px !important;
+}
+
+.login-heading > p {
+  font-size: 13.5px !important;
+  margin: 0 !important;
+}
+
+.login-role-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin: 14px 0 16px !important;
+}
+
+.login-role {
+  min-height: 64px !important;
+  padding: 10px 10px !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 9px !important;
+  border-radius: 10px !important;
+}
+
+.login-role-icon {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  flex-shrink: 0;
+}
+
+.login-role-copy {
+  gap: 1px !important;
+  min-width: 0;
+}
+
+.login-role-copy strong {
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.login-role-copy small {
+  font-size: 11px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.login-card form {
+  gap: 11px !important;
+}
+
+.login-field {
+  font-size: 13px !important;
+  gap: 5px !important;
+}
+
+.login-field > input,
+.password-control {
+  height: 41px !important;
+  border-radius: 9px !important;
+}
+
+.login-field > input,
+.password-control > input {
+  font-size: 14px !important;
+}
+
+.remember-row {
+  margin: 2px 0 !important;
+}
+
+.remember-check-label {
+  font-size: 12.5px !important;
+}
+
+.remember-row > button {
+  font-size: 12.5px !important;
+}
+
+.login-error {
+  padding: 8px 11px !important;
+  font-size: 12.5px !important;
+}
+
+.login-submit {
+  height: 43px !important;
+  font-size: 14.5px !important;
+  border-radius: 9px !important;
+}
+
+.demo-box {
+  margin-top: 14px !important;
+  padding: 10px 12px !important;
+  border-radius: 10px !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+.demo-values {
+  margin-top: 0 !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+}
+
+.demo-values code {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  background: #ffffff;
+  padding: 4px 7px;
+  border-radius: 5px;
+  border: 1px solid #e2e8f0;
+}
+
+.demo-fill {
+  padding: 5px 10px !important;
+  font-size: 12px !important;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .login-page {
+    height: auto !important;
+    max-height: none !important;
+    overflow: auto !important;
+    grid-template-columns: 1fr !important;
+  }
+  .login-brand-panel {
+    height: auto !important;
+    padding: 20px 24px !important;
+  }
+  .login-form-panel {
+    height: auto !important;
+    padding: 20px 16px 32px !important;
+  }
+}

@@ -14,7 +14,6 @@ import {
   HeartHandshake,
   ShieldCheck,
   Sparkles,
-  Zap,
 } from 'lucide-react'
 import { demoCredentials } from '@/lib/api/school'
 
@@ -22,29 +21,26 @@ const roleOptions = [
   {
     role: 'admin',
     title: 'Administrator',
-    sub: 'Manage school, staff & fees',
+    sub: 'School leadership',
     icon: ShieldCheck,
     accent: '#4f46e5',
     bgWeak: '#eef2ff',
-    badge: 'Full School Access',
   },
   {
     role: 'teacher',
     title: 'Teacher',
-    sub: 'Classes, attendance & marks',
+    sub: 'Classroom studio',
     icon: BookOpen,
     accent: '#0d9488',
     bgWeak: '#f0fdfa',
-    badge: 'Classroom Portal',
   },
   {
     role: 'guardian',
     title: 'Guardian',
-    sub: 'Child progress, results & fees',
+    sub: 'Family portal',
     icon: HeartHandshake,
     accent: '#0284c7',
     bgWeak: '#f0f9ff',
-    badge: 'Family Portal',
   },
 ]
 
@@ -103,13 +99,14 @@ export function LoginForm({ initialRole = 'admin' }) {
     setLoading(false)
   }
 
-  async function performLogin(targetRole, targetEmail, targetPassword) {
+  async function submit(event) {
+    event.preventDefault()
     setError('')
-    if (!targetEmail.trim() || !targetPassword) {
+    if (!email.trim() || !password) {
       setError('Enter your email and password to continue.')
       return
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(targetEmail.trim())) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setError('Enter a valid email address.')
       return
     }
@@ -119,9 +116,9 @@ export function LoginForm({ initialRole = 'admin' }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          role: targetRole,
-          email: targetEmail.trim(),
-          password: targetPassword,
+          role,
+          email: email.trim(),
+          password,
           remember,
         }),
       })
@@ -145,19 +142,6 @@ export function LoginForm({ initialRole = 'admin' }) {
     }
   }
 
-  async function submit(event) {
-    event.preventDefault()
-    await performLogin(role, email, password)
-  }
-
-  async function quickSignInAs(targetRole) {
-    setRole(targetRole)
-    const creds = demoCredentials[targetRole]
-    setEmail(creds.email)
-    setPassword(creds.password)
-    await performLogin(targetRole, creds.email, creds.password)
-  }
-
   return (
     <main
       className="login-page"
@@ -169,7 +153,7 @@ export function LoginForm({ initialRole = 'admin' }) {
       <section className="login-brand-panel">
         <Link href="/" className="home-brand">
           <span className="home-brand-icon">
-            <GraduationCap size={22} />
+            <GraduationCap size={20} />
           </span>
           <span>
             northstar<span>.</span>
@@ -178,54 +162,36 @@ export function LoginForm({ initialRole = 'admin' }) {
 
         <div className="login-brand-copy">
           <span className="login-kicker">
-            <Sparkles size={14} /> YOUR SCHOOL, IN SYNC
+            <Sparkles size={13} /> YOUR SCHOOL, IN SYNC
           </span>
           <h1>Good things happen when everyone’s connected.</h1>
-          <p>
-            A calm, high-clarity workspace built for administrators, teachers, and families at
-            Northstar Academy.
-          </p>
-
-          <div className="login-QuoteCard">
-            <div className="login-quote">
-              <div className="quote-avatars">
-                <span>AR</span>
-                <span>EV</span>
-                <span>MR</span>
-              </div>
-              <div>
-                <strong>One school. Everyone included.</strong>
-                <span>Admin · Teacher · Guardian Portals</span>
-              </div>
-            </div>
-          </div>
+          <p>A calm, unified workspace for administrators, teachers, and families.</p>
         </div>
 
         <div className="login-brand-bottom">
           <span>
-            <Check size={16} /> Designed for your school community
+            <Check size={15} /> Northstar Academy · Springfield, IL
           </span>
-          <span>Northstar Academy · Springfield, IL</span>
         </div>
       </section>
 
       <section className="login-form-panel">
-        <div className="login-panel-topbar">
-          <Link href="/" className="login-back">
-            <ArrowLeft size={16} /> Back to home
-          </Link>
-          <span className="login-active-pill" style={{ background: activeRoleMeta.bgWeak, color: activeRoleMeta.accent }}>
-            {activeRoleMeta.badge}
-          </span>
-        </div>
-
         <div className="login-card">
-          <div className="login-heading">
-            <span className="login-step" style={{ color: activeRoleMeta.accent }}>
-              STEP 1 OF 2 <span>·</span> SELECT PORTAL ROLE
+          <div className="login-panel-topbar">
+            <Link href="/" className="login-back">
+              <ArrowLeft size={15} /> Back to home
+            </Link>
+            <span
+              className="login-active-pill"
+              style={{ background: activeRoleMeta.bgWeak, color: activeRoleMeta.accent }}
+            >
+              {labels[role]} Portal
             </span>
+          </div>
+
+          <div className="login-heading">
             <h2>Welcome back</h2>
-            <p>Click a role below to switch portals — demo credentials fill automatically.</p>
+            <p>Choose your role and sign in to your workspace.</p>
           </div>
 
           <div className="login-role-grid" role="group" aria-label="Choose your account role">
@@ -241,35 +207,23 @@ export function LoginForm({ initialRole = 'admin' }) {
                       ? {
                           borderColor: accent,
                           background: bgWeak,
-                          boxShadow: `0 0 0 2px ${accent}28`,
+                          boxShadow: `0 0 0 2px ${accent}24`,
                         }
                       : undefined
                   }
                   aria-pressed={isSelected}
                   onClick={() => selectRole(option)}
                 >
-                  <div className="login-role-top">
-                    <span
-                      className="login-role-icon"
-                      style={
-                        isSelected
-                          ? { background: accent, color: '#ffffff' }
-                          : { background: '#f1f5f9', color: '#475569' }
-                      }
-                    >
-                      <Icon size={20} />
-                    </span>
-                    <span
-                      className="login-role-check"
-                      style={
-                        isSelected
-                          ? { background: accent, color: '#ffffff', opacity: 1 }
-                          : { background: '#e2e8f0', color: 'transparent', opacity: 0.5 }
-                      }
-                    >
-                      <Check size={13} />
-                    </span>
-                  </div>
+                  <span
+                    className="login-role-icon"
+                    style={
+                      isSelected
+                        ? { background: accent, color: '#ffffff' }
+                        : { background: '#f1f5f9', color: '#475569' }
+                    }
+                  >
+                    <Icon size={17} />
+                  </span>
                   <span className="login-role-copy">
                     <strong>{title}</strong>
                     <small>{sub}</small>
@@ -277,12 +231,6 @@ export function LoginForm({ initialRole = 'admin' }) {
                 </button>
               )
             })}
-          </div>
-
-          <div className="login-step-two">
-            <span className="login-step" style={{ color: activeRoleMeta.accent }}>
-              STEP 2 OF 2 <span>·</span> SIGN IN AS {labels[role].toUpperCase()}
-            </span>
           </div>
 
           <form onSubmit={submit} noValidate>
@@ -322,7 +270,7 @@ export function LoginForm({ initialRole = 'admin' }) {
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </span>
             </label>
@@ -334,11 +282,11 @@ export function LoginForm({ initialRole = 'admin' }) {
                   checked={remember}
                   onChange={(event) => setRemember(event.target.checked)}
                 />
-                <span>Remember me on this device</span>
+                <span>Remember me</span>
               </label>
               <button
                 type="button"
-                onClick={() => setError('For this demo, use the credentials listed below.')}
+                onClick={() => setError('Use the demo credentials below to sign in.')}
               >
                 Forgot password?
               </button>
@@ -358,70 +306,27 @@ export function LoginForm({ initialRole = 'admin' }) {
             >
               {loading ? (
                 <>
-                  <span className="login-spinner" /> Signing in to {labels[role]}...
+                  <span className="login-spinner" /> Signing you in...
                 </>
               ) : (
                 <>
-                  Continue to workspace <ArrowRight size={17} />
+                  Continue to workspace <ArrowRight size={16} />
                 </>
               )}
             </button>
           </form>
 
           <div className="demo-box">
-            <div className="demo-box-heading">
-              <div>
-                <strong>Demo credentials ({labels[role]})</strong>
-                <span>Click “Fill automatically” or launch any portal in 1 click below.</span>
-              </div>
-              <span className="demo-badge">LIVE DEMO</span>
-            </div>
-
             <div className="demo-values">
-              <span>{demoCredentials[role].email}</span>
-              <span>{demoCredentials[role].password}</span>
+              <span className="demo-badge">DEMO</span>
+              <code>{demoCredentials[role].email}</code>
+              <code>{demoCredentials[role].password}</code>
               <button type="button" className="demo-fill" onClick={fillDemo}>
-                Fill automatically <ArrowRight size={14} />
+                Fill automatically
               </button>
-            </div>
-
-            <div className="instant-demo-row">
-              <span className="instant-demo-label">
-                <Zap size={13} /> Instant 1-click launch:
-              </span>
-              <div className="instant-demo-buttons">
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => quickSignInAs('admin')}
-                  className="instant-btn instant-btn-admin"
-                >
-                  Admin Portal
-                </button>
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => quickSignInAs('teacher')}
-                  className="instant-btn instant-btn-teacher"
-                >
-                  Teacher Portal
-                </button>
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => quickSignInAs('guardian')}
-                  className="instant-btn instant-btn-guardian"
-                >
-                  Guardian Portal
-                </button>
-              </div>
             </div>
           </div>
         </div>
-
-        <p className="login-footer">
-          Need access? <a href="mailto:hello@northstar.school">Contact your school administrator</a>
-        </p>
       </section>
     </main>
   )
